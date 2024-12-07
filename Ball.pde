@@ -22,7 +22,7 @@ class Ball {
     
     if (started){
       // ball moves constantly down at speed 2 (could be modified)
-      position.y += 2;
+      position.y += 3;
   
       // lateral movement (will be changed in future for sensors)
       if (keyPressed) {
@@ -44,7 +44,7 @@ class Ball {
   void draw() {
     noFill();
     stroke(100, 100, 255, 150);
-    strokeWeight(this.radius*2);
+    strokeWeight(this.radius*2); // match with the ball's diamater
     beginShape();
     for (PVector p : trajectory) {
       vertex(p.x, p.y);
