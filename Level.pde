@@ -18,7 +18,7 @@ class Level {
     // generate a sinusoidal curve
     int totalCurves = 1;
     float frequency = totalCurves * TWO_PI / height;
-    for (float y = minY; y < maxY; y += 5) {
+    for (float y = minY; y < maxY; y += 3) {
       // for example this (to be changed so it adapts to each level)
       float x = width / 2 + sin(y * frequency) * 100; 
       path.add(new PVector(x, y));

@@ -1,10 +1,17 @@
+import processing.serial.*;
+
+Serial arduinoPort; // Create object to communicate with Arduino
 Level level;
 Ball ball;
+HapticFeedback hapticFeedback;
 
 void setup() {
   fullScreen();
   level = new Level(60, 1);         // level with thickness 60, id 1
   ball = new Ball(width / 2, 0, 30); // Ball centered at the topwith radius 30
+  arduinoPort = new Serial(this, Serial.list()[4], 9600); // Open Serial port
+  hapticFeedback = new HapticFeedback(ball, level, arduinoPort);
+  
 }
 
 void draw() {
@@ -18,6 +25,7 @@ void draw() {
   // move and draw ball
   ball.move();
   ball.draw();
+  hapticFeedback.sendFeedback();
 
   //check if level is over, and print information
   if (ball.position.y > height) {

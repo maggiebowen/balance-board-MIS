@@ -4,6 +4,7 @@ class Ball {
   float radius;                 // ball's radius
   int startTime;              // to measure the start time of the program
   boolean started;            // indicates if ball started moving
+  int numberMoves;            //to indicate how many move the ball has made
 
   Ball(float startX, float startY, float radius) {
     this.position = new PVector(startX, startY);
@@ -11,6 +12,7 @@ class Ball {
     this.radius = radius;
     this.started = false;
     this.startTime = millis();
+    this.numberMoves = 0;
   }
 
   void move() {
@@ -21,6 +23,8 @@ class Ball {
     }
     
     if (started){
+      // update the number of moves
+      numberMoves += 1;
       // ball moves constantly down at speed 2 (could be modified)
       position.y += 3;
   
