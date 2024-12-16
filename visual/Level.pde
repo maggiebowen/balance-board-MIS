@@ -7,10 +7,10 @@ class Level {
     this.thickness = thickness;
     this.id = id;
     path = new ArrayList<PVector>();
-    generarPath();
+    genetePath();
   }
   
-  void generarPath() {  // create Path
+  void genetePath() {  // create Path
     
     float distance = 150;
     float minY = distance;

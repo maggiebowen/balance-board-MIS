@@ -53,7 +53,7 @@ bool display_BNO055_info = false; // set to true if you want to print on the ser
 
 /* Set the correction factors for the three Euler angles according to the wanted orientation */
 float  correction_x = 0; // -177.19;
-float  correction_y = 0; // 
+float  correction_y = 3.15; // correction factor 
 float  correction_z = 0; // 1.25;
 
 
@@ -71,7 +71,7 @@ void setup() {
   /* Setup of the IMU BNO055 sensor ******************************************************************************/
   
   /* Initialise the IMU BNO055 sensor */
-  delay(1000);
+  delay(100);
   if (!bno.begin()){
     /* There was a problem detecting the BNO055 ... check your connections */
     Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
@@ -116,7 +116,7 @@ void loop() {
     bno.getEvent(&angVelData, Adafruit_BNO055::VECTOR_GYROSCOPE);
 
     // Enviar ambos valores por el puerto serie
-    Serial.print(orientationData.orientation.y);  // Orientación Y
+    Serial.print(orientationData.orientation.y + correction_y);  // Orientación Y
     Serial.print("\n");
 
   }

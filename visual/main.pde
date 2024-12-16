@@ -4,7 +4,7 @@ Ball ball;
 void setup() {
   fullScreen();
   level = new Level(60, 1);         // level with thickness 60, id 1
-  ball = new Ball(width / 2, 0, 30); // Ball centered at the topwith radius 30
+  ball = new Ball(this, "COM3", width / 2, 30, 30); 
 }
 
 void draw() {

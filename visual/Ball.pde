@@ -1,40 +1,69 @@
+import processing.serial.*;
+
 class Ball {
   PVector position;        // position of Ball
   ArrayList<PVector> trajectory; // trajectory of ball
+  float velY;            // vertical velocity
+  float velX;           // horizontal velocity (it will change)
   float radius;                 // ball's radius
   int startTime;              // to measure the start time of the program
   boolean started;            // indicates if ball started moving
+  Serial myPort;       // serial connection for sensor input
+  String orientationY = "";   // IMU's value received (pitch at Y direction)
+  PApplet parent;             // reference to the parent sketch
 
-  Ball(float startX, float startY, float radius) {
+  Ball(PApplet parent, String portName, float startX, float startY, float radius) {
+    this.parent = parent;      // store the parent sketch reference
     this.position = new PVector(startX, startY);
     this.trajectory = new ArrayList<PVector>();
     this.radius = radius;
+    this.velY = 2;             // default vertical speed
+    this.velX = 0;             // initially, it is not falling
     this.started = false;
-    this.startTime = millis();
+    this.startTime = parent.millis();
+    
+    myPort = new Serial(parent, portName, 115200); // Use parent reference here
   }
 
   void move() {
-    
-    // start if time is over 1 second
-    if (!started && millis() - startTime >= 1000) {
+    // start if time is over 3 second
+    if (!started && parent.millis() - startTime >= 3000) {
       started = true; 
     }
     
-    if (started){
+    if (started) {
       // ball moves constantly down at speed 2 (could be modified)
-      position.y += 3;
+      position.y += velY;
   
       // lateral movement (will be changed in future for sensors)
-      if (keyPressed) {
-        if (keyCode == LEFT) { // move left
-          position.x -= 2;
-        } 
+      if (myPort.available() > 0) {
+        String val = myPort.readStringUntil('\n');
         
-        if (keyCode == RIGHT) {
-          position.x += 2; // move right
-         } 
+        if (val != null) {
+          orientationY = val.trim(); // trim
+          
+          try {
+            float orientationYFloat = Float.parseFloat(orientationY); // convert to float
+            velX = PApplet.map(orientationYFloat, -90, 90, -50, 50); // map angle to horizontal displacement
+            velX = (int) -velX; // change to negative (for orientation purposes) and pass to integer 
+   
+          } catch (NumberFormatException e) {
+            parent.println("Error parsing IMU data");
+          }
+        }
       }
-  
+      
+      // Update horizontal position
+      position.x += velX;
+      
+      // Prevent ball from leaving the screen horizontally
+      if (position.x < radius) {
+        position.x = radius;
+      }
+      if (position.x > parent.width - radius) {
+        position.x = parent.width - radius;
+      }
+ 
       // add trajectory
       trajectory.add(new PVector(position.x, position.y));
     }
@@ -42,18 +71,18 @@ class Ball {
   
   // drawing trajectory
   void draw() {
-    noFill();
-    stroke(100, 100, 255, 150);
-    strokeWeight(this.radius*2); // match with the ball's diamater
-    beginShape();
+    parent.noFill();
+    parent.stroke(100, 100, 255, 150);
+    parent.strokeWeight(this.radius * 2); // match with the ball's diameter
+    parent.beginShape();
     for (PVector p : trajectory) {
-      vertex(p.x, p.y);
+      parent.vertex(p.x, p.y);
     }
-    endShape();
+    parent.endShape();
 
     // draw ball
-    fill(0);
-    noStroke();
-    ellipse(position.x, position.y, radius * 2, radius * 2);
+    parent.fill(0);
+    parent.noStroke();
+    parent.ellipse(position.x, position.y, radius * 2, radius * 2);
   }
 }
