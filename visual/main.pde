@@ -1,14 +1,19 @@
 Level level;
 Ball ball;
+PImage bg;
 
 void setup() {
-  fullScreen();
-  level = new Level(60, 1);         // level with thickness 60, id 1
-  ball = new Ball(this, "COM3", width / 2, 30, 30); 
+  //fullScreen();
+  size(950,950);
+  level = new Level(60, 1);     // level with thickness 60, id 1
+  // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
+  // mac: /dev/cu.usbmodem1101
+  ball = new Ball(this, "/dev/cu.usbmodem1101", width / 2, 30, 30); 
+  bg = loadImage("space-background3.png");
 }
 
 void draw() {
-  background(255); // white
+  background(bg); // background image
 
   // draw the level (the trajectory to be drawn)
   level.draw();
@@ -36,22 +41,42 @@ void draw() {
 // check accuracy 
 float calculateAccuracy() {
   int pointsCovered = 0;
-  int totalPoints = level.path.size();
+  int totalTrajectoryPoints = ball.trajectory.size();
+  int totalPathSegments = level.path.size() - 1; // One less than total path points
 
+  for (PVector trajectoryPoint : ball.trajectory) {
+    boolean isCovered = false;
 
-  for (PVector p : level.path) {
-    // see if level point is within trajectory of ball
-    for (PVector ballPoint : ball.trajectory) {
-      // if the distance between each point of the level is lower than the radius
-      // ball.radius/2 can be used maybe, if not a bit easy?
-      if (dist(p.x, p.y, ballPoint.x, ballPoint.y) <= ball.radius) { 
-        pointsCovered++; // increase the count
-        break; 
+    // Check the trajectory point against each segment of the path
+    for (int i = 0; i < totalPathSegments; i++) {
+      PVector start = level.path.get(i);
+      PVector end = level.path.get(i + 1);
+      float distance = distToSegment(trajectoryPoint, start, end);
+
+      // If the point is within the ball's radius, count it as covered
+      if (distance <= ball.radius) {
+        isCovered = true;
+        break;
       }
+    }
+
+    if (isCovered) {
+      pointsCovered++;
     }
   }
 
-  return (float)pointsCovered / totalPoints * 100; // return the % of covered points
+  // Return percentage of covered points
+  return (float) pointsCovered / totalTrajectoryPoints * 100;
+}
+
+// Helper function: Calculate the shortest distance from a point to a line segment
+float distToSegment(PVector p, PVector v, PVector w) {
+  float l2 = sq(dist(v.x, v.y, w.x, w.y)); // Squared length of segment
+  if (l2 == 0) return dist(p.x, p.y, v.x, v.y); // Segment is a point
+  float t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+  t = constrain(t, 0, 1); // Clamp t to the segment
+  PVector projection = new PVector(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y));
+  return dist(p.x, p.y, projection.x, projection.y);
 }
 
 // show Level X (depending on the level)
