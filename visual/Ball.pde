@@ -11,6 +11,7 @@ class Ball {
   Serial myPort;       // serial connection for sensor input
   String orientationY = "";   // IMU's value received (pitch at Y direction)
   PApplet parent;             // reference to the parent sketch
+  PImage astroImage;           // astronaut image
 
   Ball(PApplet parent, String portName, float startX, float startY, float radius) {
     this.parent = parent;      // store the parent sketch reference
@@ -23,6 +24,8 @@ class Ball {
     this.startTime = parent.millis();
     
     myPort = new Serial(parent, portName, 115200); // Use parent reference here
+    
+    astroImage = parent.loadImage("astronaut.PNG");
   }
 
   void move() {
@@ -74,15 +77,15 @@ class Ball {
     parent.noFill();
     parent.stroke(100, 100, 255, 150);
     parent.strokeWeight(this.radius * 2); // match with the ball's diameter
+    parent.strokeJoin(BEVEL);
     parent.beginShape();
     for (PVector p : trajectory) {
       parent.vertex(p.x, p.y);
     }
     parent.endShape();
 
-    // draw ball
-    parent.fill(0);
-    parent.noStroke();
-    parent.ellipse(position.x, position.y, radius * 2, radius * 2);
+    // draw ball as an astronaut image
+    parent.imageMode(PApplet.CENTER); // Center the image on its position
+    parent.image(astroImage, position.x, position.y, radius * 2, radius * 2);
   }
 }
