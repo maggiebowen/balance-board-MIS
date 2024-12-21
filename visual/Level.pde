@@ -7,34 +7,28 @@ class Level {
     this.thickness = thickness;
     this.id = id;
     path = new ArrayList<PVector>();
-    genetePath();
+    generatePath();
   }
   
-  void genetePath() {  // create Path
+  void generatePath() {  // create Path
     
     float distance = 150;
-    float minY = distance;
+    float minY = 30;  // Start 30 pixels down from the top of the screen
     float maxY = height - distance;
     // generate a sinusoidal curve
     int totalCurves = 1;
     float frequency = totalCurves * TWO_PI / height;
     for (float y = minY; y < maxY; y += 5) {
-      // for example this (to be changed so it adapts to each level)
+      // Create the curve centered in the middle of the screen
       float x = width / 2 + sin(y * frequency) * 100; 
       path.add(new PVector(x, y));
     }
-    
-    // straight line
-    //for (float y= minY; y < maxY; y += 5) {
-      //float x = width/2;
-      //path.add(new PVector(x,y));
-    //}
   }
   
   // draw the shape
   void draw() {
     noFill();
-    stroke(200, 100, 100, 150);
+    stroke(255, 224, 55, 150);
     strokeWeight(thickness);
     beginShape();
     for (PVector p : path) {
