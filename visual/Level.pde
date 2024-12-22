@@ -1,5 +1,5 @@
 class Level {
-  ArrayList<PVector> path; // trayectory to be drawn
+  ArrayList<PVector> path; // trajectory to be drawn
   float thickness;         // thickness of drawing
   float id;               // level number
 
