@@ -5,7 +5,7 @@ PImage bg;
 void setup() {
   //fullScreen();
   size(950,950);
-  level = new Level(60, 1, 1, 100);     // level with thickness 60, id 1
+  level = new Level(60, 1, 1, 100);     // level with thickness 60, id 1 --> think we need to somehow include a change in the ball's vertical velocity so that in the early levels it falls slower
   // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
   // mac: /dev/cu.usbmodem1101
   ball = new Ball(this, "/dev/cu.usbmodem1101", width / 2, 30, 30); 
