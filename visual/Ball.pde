@@ -25,7 +25,7 @@ class Ball {
     
     myPort = new Serial(parent, portName, 115200); // Use parent reference here
     
-    astroImage = parent.loadImage("astronaut.PNG");
+    astroImage = parent.loadImage("astronaut.png");
   }
 
   void move() {
