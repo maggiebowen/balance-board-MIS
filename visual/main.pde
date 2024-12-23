@@ -1,8 +1,20 @@
+import netP5.*;
+import oscP5.*;
+
+
 Level level;
 Ball ball;
 
+
+OscP5 oscP5;
+NetAddress pureData;
+
 void setup() {
   fullScreen();
+  
+  oscP5 = new OscP5(this, 12000); 
+  pureData = new NetAddress("127.0.0.1", 8000); 
+ 
   level = new Level(60, 1);         // level with thickness 60, id 1
   ball = new Ball(this, "COM3", width / 2, 30, 30); 
 }
@@ -18,6 +30,13 @@ void draw() {
   // move and draw ball
   ball.move();
   ball.draw();
+  
+  // calculate minDistance
+  float minDistance = calculateHorizontalDistance();
+  
+  OscMessage msg = new OscMessage("/distance");
+  msg.add(minDistance);
+  oscP5.send(msg, pureData);
 
   //check if level is over, and print information
   if (ball.position.y > height) {
@@ -62,4 +81,17 @@ void showInfo(){
   textSize(50);
   text("Level " + int(level.id), width - 50, 50);
   
+}
+
+
+float calculateHorizontalDistance() {
+  float minDistance = Float.MAX_VALUE;
+  for (PVector p : level.path) {
+    float distHorizontal = abs(ball.position.x - p.x);
+    if (distHorizontal < minDistance) {
+      minDistance = distHorizontal;
+    }
+  }
+  println(minDistance);
+  return minDistance;
 }
