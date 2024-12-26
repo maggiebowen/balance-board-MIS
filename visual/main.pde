@@ -2,14 +2,16 @@ Level level;
 Ball ball;
 PImage bg;
 
+int currentLevel = 1; // Global variable to track the current level
+
 void setup() {
   //fullScreen();
-  size(950,950);
-  level = new Level(60, 1, 1, 100);     // level with thickness 60, id 1 --> think we need to somehow include a change in the ball's vertical velocity so that in the early levels it falls slower
+  size(1500,900);
+  level = new Level(60, 1, 100);     // level with thickness 60, id 1
   // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
   // mac: /dev/cu.usbmodem1101
-  ball = new Ball(this, "/dev/cu.usbmodem1101", width / 2, 30, 30); 
-  bg = loadImage("space-background3.png");
+  ball = new Ball(this, "/dev/cu.usbmodem1101", width / 2, 30, 30, 1); 
+  bg = loadImage("space-background-extended.png");
 }
 
 void draw() {
@@ -25,17 +27,59 @@ void draw() {
   ball.draw();
 
   //check if level is over, and print information
+  //if (ball.position.y > height) {
+  //  float accuracy = calculateAccuracy();
+  //  println("Accuracy: " + accuracy + "%");
+    
+  //  // draw text in the center with information
+  //  fill(0);
+  //  textAlign(CENTER,CENTER);
+  //  textSize(100);
+  //  text("ACCURACY: " + int(accuracy) + "%", width/2, height/2);
+    
+    
+  //  if (accuracy > 50) {
+  //    changeLevel(60, 2, 150, 2);
+  //  } else {
+  //    noLoop(); // stop program
+  //  }
+  //}
+  
+  // Check if level is over, and print information
   if (ball.position.y > height) {
     float accuracy = calculateAccuracy();
     println("Accuracy: " + accuracy + "%");
     
-    // draw text in the center with information
+    // Display accuracy information in the center
     fill(0);
-    textAlign(CENTER,CENTER);
+    textAlign(CENTER, CENTER);
     textSize(100);
-    text("ACCURACY: " + int(accuracy) + "%", width/2, height/2);
-    noLoop(); // stop program
+    text("ACCURACY: " + int(accuracy) + "%", width / 2, height / 2);
+    
+    if (accuracy > 50) {
+      // Increment level and adjust difficulty
+      currentLevel++;
+      float newThickness = 60 - currentLevel * 5; // Decrease thickness with each level
+      float newCurveWidth = 100 + currentLevel * 20; // Increase curve complexity
+      float newVelY = 2 + currentLevel * 0.5f; // Increase ball speed
+      
+      // Update the level
+      changeLevel(newThickness, currentLevel, newCurveWidth, newVelY);
+    } else {
+      // Stop the program if accuracy is too low
+      println("Game Over. Try Again!");
+      noLoop();
+    }
   }
+  
+  // logic:
+  // draw instructions
+  // draw level one, make it slower that it currently is
+  // if accuracy is 50% or higher, draw next level and reset ball (changeLevel function)
+    // include a change in ball velcoity 
+  // if next level, increase level id by 1, increase 
+  
+
 }
 
 // check accuracy 
@@ -79,6 +123,12 @@ float distToSegment(PVector p, PVector v, PVector w) {
   return dist(p.x, p.y, projection.x, projection.y);
 }
 
+void changeLevel(float thickness, float id, float curveWidth, float velY) {
+   level = new Level(thickness, id, curveWidth);
+   ball.reset(width / 2, 30, velY); // Reset ball to initial position
+   loop(); // Restart the draw loop
+}
+
 // show Level X (depending on the level)
 void showInfo(){
   
@@ -86,5 +136,4 @@ void showInfo(){
   textAlign(RIGHT,TOP);
   textSize(50);
   text("Level " + int(level.id), width - 50, 50);
-  
 }
