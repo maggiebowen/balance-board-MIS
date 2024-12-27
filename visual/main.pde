@@ -8,12 +8,13 @@ Ball ball;
 
 OscP5 oscP5;
 NetAddress pureData;
+boolean playSound = false;
 
 void setup() {
   fullScreen();
   
-  oscP5 = new OscP5(this, 12000); 
-  pureData = new NetAddress("127.0.0.1", 8000); 
+  oscP5 = new OscP5(this, 8000); 
+  pureData = new NetAddress("127.0.0.1", 12000); 
  
   level = new Level(60, 1);         // level with thickness 60, id 1
   ball = new Ball(this, "COM3", width / 2, 30, 30); 
@@ -21,7 +22,12 @@ void setup() {
 
 void draw() {
   background(255); // white
-
+  
+  // Start sound when the level starts
+  if (!playSound) {
+    startSound();
+  }
+  
   // draw the level (the trajectory to be drawn)
   level.draw();
   
@@ -40,6 +46,7 @@ void draw() {
 
   //check if level is over, and print information
   if (ball.position.y > height) {
+    stopSound(); // stop the pd sound
     float accuracy = calculateAccuracy();
     println("Accuracy: " + accuracy + "%");
     
@@ -83,7 +90,7 @@ void showInfo(){
   
 }
 
-
+// calculate horizontal distance between trail and ball
 float calculateHorizontalDistance() {
   float minDistance = Float.MAX_VALUE;
   for (PVector p : level.path) {
@@ -92,6 +99,22 @@ float calculateHorizontalDistance() {
       minDistance = distHorizontal;
     }
   }
-  println(minDistance);
   return minDistance;
+}
+
+// Function to start the sound
+void startSound() {
+  OscMessage msg = new OscMessage("/distance");
+  msg.add(10000); // Turn DSP on
+  print ("Send message");
+  oscP5.send(msg, pureData);
+  playSound = true;
+}
+
+// Function to stop the sound
+void stopSound() {
+  OscMessage msg = new OscMessage("/distance");
+  msg.add(-10000); // Turn DSP off
+  oscP5.send(msg, pureData);
+  playSound = false;
 }
