@@ -18,7 +18,7 @@ class Level {
     // generate a sinusoidal curve
     float frequency = totalCurves * TWO_PI / height;
 
-    for (float y = minY; y < maxY; y += 5) {
+    for (float y = minY; y < maxY; y += 2) { //change the 2 for 5 later, trying to test HF
         // Adjust curve width using the curveWidth parameter
         float x = width / 2 + sin(y * frequency) * curveWidth;
         path.add(new PVector(x, y));

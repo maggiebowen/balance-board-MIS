@@ -1,17 +1,21 @@
+Serial arduinoPort; // Create object to communicate with Arduino
 Level level;
 Ball ball;
 PImage bg;
+HapticFeedback hapticFeedback;
 
 int currentLevel = 1; // Global variable to track the current level
 
 void setup() {
   //fullScreen();
   size(1500,900);
-  level = new Level(60, 1, 100);     // level with thickness 60, id 1
+  level = new Level(60, 1, 100,100);     // level with thickness 60, id 1
   // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
   // mac: /dev/cu.usbmodem1101
-  ball = new Ball(this, "/dev/cu.usbmodem1101", width / 2, 30, 30, 1); 
+  arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
+  ball = new Ball(this, arduinoPort, width / 2, 30, 30); 
   bg = loadImage("space-background-extended.png");
+  hapticFeedback = new HapticFeedback(ball, level, arduinoPort);
 }
 
 void draw() {
@@ -25,7 +29,7 @@ void draw() {
   // move and draw ball
   ball.move();
   ball.draw();
-
+  hapticFeedback.sendFeedback();
   //check if level is over, and print information
   //if (ball.position.y > height) {
   //  float accuracy = calculateAccuracy();
@@ -124,8 +128,8 @@ float distToSegment(PVector p, PVector v, PVector w) {
 }
 
 void changeLevel(float thickness, float id, float curveWidth, float velY) {
-   level = new Level(thickness, id, curveWidth);
-   ball.reset(width / 2, 30, velY); // Reset ball to initial position
+   level = new Level(thickness, id,100, curveWidth);
+   //ball.reset(width / 2, 30, velY); // Reset ball to initial position
    loop(); // Restart the draw loop
 }
 

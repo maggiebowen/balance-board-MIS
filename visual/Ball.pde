@@ -11,9 +11,10 @@ class Ball {
   Serial myPort;       // serial connection for sensor input
   String orientationY = "";   // IMU's value received (pitch at Y direction)
   PApplet parent;             // reference to the parent sketch
-  PImage astroImage;           // astronaut image
+  PImage astroImage;           // astronaut image 
+  int numberMoves;            //to indicate how many move the ball has made
 
-  Ball(PApplet parent, String portName, float startX, float startY, float radius) {
+  Ball(PApplet parent, Serial arduinoPort, float startX, float startY, float radius) {
     this.parent = parent;      // store the parent sketch reference
     this.position = new PVector(startX, startY);
     this.trajectory = new ArrayList<PVector>();
@@ -22,8 +23,8 @@ class Ball {
     this.velX = 0;             // initially, it is not falling
     this.started = false;
     this.startTime = parent.millis();
-    
-    myPort = new Serial(parent, portName, 115200); // Use parent reference here
+    this.myPort = arduinoPort;
+    this.numberMoves = 0;
     
     astroImage = parent.loadImage("astronaut.png");
   }
@@ -35,6 +36,8 @@ class Ball {
     }
     
     if (started) {
+      //update the number of moves
+      numberMoves += 1;
       // ball moves constantly down at speed 2 (could be modified)
       position.y += velY;
   

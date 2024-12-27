@@ -25,14 +25,9 @@
 
 #define BAUD_RATE 115200 //NOTE: on the Teensy this is meaningless as the Teensy always transmits data at the full USB speed
 
-
-
-
-
-
 /* Analog inputs ******************************************************************************************/
 
-// #define ANALOG_BIT_RESOLUTION 12 // Only for Teensy
+#define ANALOG_BIT_RESOLUTION 12 // Only for Teensy
 #define ANALOG_PERIOD_MICROSECS 1000
 
 
@@ -56,16 +51,21 @@ float  correction_x = 0; // -177.19;
 float  correction_y = 3.15; // correction factor 
 float  correction_z = 0; // 1.25;
 
+/**************************************************************************************************************/
 
+/* Vibration motors ***************************************************************************************************/
+
+int right_motor_pin = 9;
+int left_motor_pin = 10; 
+int right_motor_intensity = 0;
+int left_motor_intensity = 0;  
 
 /**************************************************************************************************************/
 
 void setup() {
   Serial.begin(BAUD_RATE);
   while(!Serial);
-
- 
-  // analogReadResolution(ANALOG_BIT_RESOLUTION); // Only for Teensy
+  analogReadResolution(ANALOG_BIT_RESOLUTION); // Only for Teensy
 
 
   /* Setup of the IMU BNO055 sensor ******************************************************************************/
@@ -83,8 +83,6 @@ void setup() {
   long bnoID;
   bool foundCalib = false;
 
-    
-  
   EEPROM.get(eeAddress, eeBnoID);
   
   adafruit_bno055_offsets_t calibrationData;
@@ -96,11 +94,14 @@ void setup() {
   */
   bno.getSensor(&sensor);
   bnoID = sensor.sensor_id;
-    
 
 
   /* Crystal must be configured AFTER loading calibration data into BNO055. */
   bno.setExtCrystalUse(true); 
+
+  //link vibration motors with output
+  pinMode(right_motor_pin, OUTPUT);
+  pinMode(left_motor_pin, OUTPUT);
   
 }
 
@@ -120,6 +121,26 @@ void loop() {
     Serial.print("\n");
 
   }
+
+  //Send haptic feedback
+  if (Serial.available()>0){
+    // Expect data in the format: "RxxxLxxx" (e.g., "R100L200")
+    String input = Serial.readStringUntil('\n');
+    if (input.startsWith("R") && input.indexOf("L") != -1){
+      // Parse right motor intensity
+      int rIndex = input.indexOf("R") + 1;
+      int lIndex = input.indexOf("L");
+      right_motor_intensity = input.substring(rIndex, lIndex).toInt();
+
+      //Parse left motor intensity
+      left_motor_intensity = input.substring(lIndex + 1).toInt();
+
+      // Write the intensities to the motors
+      analogWrite(right_motor_pin, right_motor_intensity);
+      analogWrite(left_motor_pin, left_motor_intensity);
+    }
+  }
+
 }
 
 
