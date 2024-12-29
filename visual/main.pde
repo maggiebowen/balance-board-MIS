@@ -31,28 +31,31 @@ void draw() {
   ball.draw();
   hapticFeedback.sendFeedback();
   
-  // Check if level is over, and print information
+  // Check if the level is complete (when the ball falls off the screen)
   if (ball.position.y > height) {
-    float accuracy = calculateAccuracy();
+    // Calculate the accuracy of the player's trajectory
+    float accuracy = level.calculateAccuracy(ball);
     println("Accuracy: " + accuracy + "%");
     
-    // Display accuracy information in the center
+    // Display the accuracy information in the center of the screen
     fill(0);
     textAlign(CENTER, CENTER);
     textSize(100);
     text("ACCURACY: " + int(accuracy) + "%", width / 2, height / 2);
     
+    // If accuracy is above the threshold, advance to the next level
     if (accuracy > 50) {
-      // Increment level and adjust difficulty
-      currentLevel++;
+      currentLevel++; // Increment the level number
+
+      // Adjust the difficulty for the new level
       float newThickness = 60 - currentLevel * 5; // Decrease thickness with each level
       float newCurveWidth = 100 + currentLevel * 20; // Increase curve complexity
       float newVelY = 2 + currentLevel * 0.5f; // Increase ball speed
       
-      // Update the level
+      // Update the level with new parameters
       changeLevel(newThickness, currentLevel, newCurveWidth, newVelY);
     } else {
-      // Stop the program if accuracy is too low
+      // If accuracy is too low, end the game
       println("Game Over. Try Again!");
       noLoop();
     }
@@ -65,53 +68,11 @@ void draw() {
     // include a change in ball velcoity 
   // if next level, increase level id by 1, increase 
   
-
-}
-
-// check accuracy 
-float calculateAccuracy() {
-  int pointsCovered = 0;
-  int totalTrajectoryPoints = ball.trajectory.size();
-  int totalPathSegments = level.path.size() - 1; // One less than total path points
-
-  for (PVector trajectoryPoint : ball.trajectory) {
-    boolean isCovered = false;
-
-    // Check the trajectory point against each segment of the path
-    for (int i = 0; i < totalPathSegments; i++) {
-      PVector start = level.path.get(i);
-      PVector end = level.path.get(i + 1);
-      float distance = distToSegment(trajectoryPoint, start, end);
-
-      // If the point is within the ball's radius, count it as covered
-      if (distance <= ball.radius) {
-        isCovered = true;
-        break;
-      }
-    }
-
-    if (isCovered) {
-      pointsCovered++;
-    }
-  }
-
-  // Return percentage of covered points
-  return (float) pointsCovered / totalTrajectoryPoints * 100;
-}
-
-// Helper function: Calculate the shortest distance from a point to a line segment
-float distToSegment(PVector p, PVector v, PVector w) {
-  float l2 = sq(dist(v.x, v.y, w.x, w.y)); // Squared length of segment
-  if (l2 == 0) return dist(p.x, p.y, v.x, v.y); // Segment is a point
-  float t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
-  t = constrain(t, 0, 1); // Clamp t to the segment
-  PVector projection = new PVector(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y));
-  return dist(p.x, p.y, projection.x, projection.y);
 }
 
 void changeLevel(float thickness, float id, float curveWidth, float velY) {
-   level = new Level(thickness, id,100, curveWidth);
-   //ball.reset(width / 2, 30, velY); // Reset ball to initial position
+   level = new Level(thickness, id, curveWidth);
+   ball.reset(width / 2, 30, velY); // Reset ball to initial position
    loop(); // Restart the draw loop
 }
 
