@@ -9,7 +9,7 @@ int currentLevel = 1; // Global variable to track the current level
 void setup() {
   //fullScreen();
   size(1500,900);
-  level = new Level(60, 1, 100,100);     // level with thickness 60, id 1
+  level = new Level(60, 1, 100);     // level with thickness 60, id 1
   // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
   // mac: /dev/cu.usbmodem1101
   arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
@@ -30,24 +30,6 @@ void draw() {
   ball.move();
   ball.draw();
   hapticFeedback.sendFeedback();
-  //check if level is over, and print information
-  //if (ball.position.y > height) {
-  //  float accuracy = calculateAccuracy();
-  //  println("Accuracy: " + accuracy + "%");
-    
-  //  // draw text in the center with information
-  //  fill(0);
-  //  textAlign(CENTER,CENTER);
-  //  textSize(100);
-  //  text("ACCURACY: " + int(accuracy) + "%", width/2, height/2);
-    
-    
-  //  if (accuracy > 50) {
-  //    changeLevel(60, 2, 150, 2);
-  //  } else {
-  //    noLoop(); // stop program
-  //  }
-  //}
   
   // Check if level is over, and print information
   if (ball.position.y > height) {
