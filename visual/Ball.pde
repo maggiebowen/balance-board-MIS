@@ -26,7 +26,7 @@ class Ball {
     this.myPort = arduinoPort;
     this.numberMoves = 0;
     
-    astroImage = parent.loadImage("astronaut.png");
+    astroImage = parent.loadImage("images/astronaut.png");
   }
 
   void move() {

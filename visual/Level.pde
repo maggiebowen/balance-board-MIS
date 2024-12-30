@@ -37,5 +37,46 @@ class Level {
     }
     endShape();
   }
+  
+  // check accuracy 
+  float calculateAccuracy(Ball ball) {
+    int pointsCovered = 0;
+    int totalTrajectoryPoints = ball.trajectory.size();
+    int totalPathSegments = level.path.size() - 1; // One less than total path points
+  
+    for (PVector trajectoryPoint : ball.trajectory) {
+      boolean isCovered = false;
+  
+      // Check the trajectory point against each segment of the path
+      for (int i = 0; i < totalPathSegments; i++) {
+        PVector start = level.path.get(i);
+        PVector end = level.path.get(i + 1);
+        float distance = distToSegment(trajectoryPoint, start, end);
+  
+        // If the point is within the ball's radius, count it as covered
+        if (distance <= ball.radius) {
+          isCovered = true;
+          break;
+        }
+      }
+  
+      if (isCovered) {
+        pointsCovered++;
+      }
+    }
+  
+    // Return percentage of covered points
+    return (float) pointsCovered / totalTrajectoryPoints * 100;
+  }
+  
+  // Helper function: Calculate the shortest distance from a point to a line segment
+  float distToSegment(PVector p, PVector v, PVector w) {
+    float l2 = sq(dist(v.x, v.y, w.x, w.y)); // Squared length of segment
+    if (l2 == 0) return dist(p.x, p.y, v.x, v.y); // Segment is a point
+    float t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+    t = constrain(t, 0, 1); // Clamp t to the segment
+    PVector projection = new PVector(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y));
+    return dist(p.x, p.y, projection.x, projection.y);
+  }
 
 }

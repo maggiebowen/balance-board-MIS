@@ -4,6 +4,7 @@ Ball ball;
 PImage bg;
 HapticFeedback hapticFeedback;
 
+boolean applyHFB = true; // variable to apply haptic feedback --> set to false if testing without
 int currentLevel = 1; // Global variable to track the current level
 
 void setup() {
@@ -12,10 +13,14 @@ void setup() {
   level = new Level(60, 1, 100);     // level with thickness 60, id 1
   // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
   // mac: /dev/cu.usbmodem1101
-  arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
+  arduinoPort = new Serial(this, "COM3", 115200); //change the port name depending on Mac or Windows
   ball = new Ball(this, arduinoPort, width / 2, 30, 30); 
-  bg = loadImage("space-background-extended.png");
-  hapticFeedback = new HapticFeedback(ball, level, arduinoPort);
+  bg = loadImage("images/space-background-extended.png");
+  
+  if (applyHFB){
+    hapticFeedback = new HapticFeedback(ball, level, arduinoPort);
+  }
+  
 }
 
 void draw() {
@@ -29,7 +34,11 @@ void draw() {
   // move and draw ball
   ball.move();
   ball.draw();
-  hapticFeedback.sendFeedback();
+  
+  if (applyHFB) { // if providing user with haptic feedback
+    hapticFeedback.sendFeedback();
+  }
+  
   
   // Check if the level is complete (when the ball falls off the screen)
   if (ball.position.y > height) {
@@ -53,7 +62,7 @@ void draw() {
       float newVelY = 2 + currentLevel * 0.5f; // Increase ball speed
       
       // Update the level with new parameters
-      changeLevel(newThickness, currentLevel, newCurveWidth, newVelY);
+      // changeLevel(newThickness, currentLevel, newCurveWidth, newVelY);
     } else {
       // If accuracy is too low, end the game
       println("Game Over. Try Again!");
@@ -70,11 +79,12 @@ void draw() {
   
 }
 
-void changeLevel(float thickness, float id, float curveWidth, float velY) {
-   level = new Level(thickness, id, curveWidth);
-   ball.reset(width / 2, 30, velY); // Reset ball to initial position
-   loop(); // Restart the draw loop
-}
+// void changeLevel(float thickness, float id, float curveWidth, float velY) {
+//   level = new Level(thickness, id, curveWidth);
+//   ball.reset(width / 2, 30, velY); // Reset ball to initial position
+//   loop(); // Restart the draw loop
+// }
+
 
 // show Level X (depending on the level)
 void showInfo(){
