@@ -79,11 +79,11 @@ void draw() {
   
 }
 
-// void changeLevel(float thickness, float id, float curveWidth, float velY) {
-//   level = new Level(thickness, id, curveWidth);
-//   ball.reset(width / 2, 30, velY); // Reset ball to initial position
-//   loop(); // Restart the draw loop
-// }
+void changeLevel(float thickness, float id, float curveWidth, float velY) {
+   level = new Level(thickness, id, curveWidth);
+   ball.reset(width / 2, 30, velY); // Reset ball to initial position
+   loop(); // Restart the draw loop
+}
 
 
 // show Level X (depending on the level)
