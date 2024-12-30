@@ -74,6 +74,28 @@ class Ball {
       trajectory.add(new PVector(position.x, position.y));
     }
   }
+
+  // reset ball for next level
+  void reset(float startX, float startY, float velY) {
+    // Reset position to the starting coordinates
+    position.set(startX, startY);
+
+    // Clear trajectory to remove old paths
+    trajectory.clear();
+
+    // Reset velocities
+    velY = 2;  // Default vertical speed
+    velX = 0;  // No horizontal movement initially
+
+    // Reset time and movement state
+    startTime = parent.millis();
+    started = false;
+
+    // Optionally, clear serial buffer to avoid leftover data
+    if (myPort != null && myPort.available() > 0) {
+        myPort.clear();
+    }
+  }
   
   // drawing trajectory
   void draw() {
