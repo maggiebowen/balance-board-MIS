@@ -65,7 +65,7 @@ int left_motor_intensity = 0;
 void setup() {
   Serial.begin(BAUD_RATE);
   while(!Serial);
-  analogReadResolution(ANALOG_BIT_RESOLUTION); // Only for Teensy
+  // analogReadResolution(ANALOG_BIT_RESOLUTION); // Only for Teensy
 
 
   /* Setup of the IMU BNO055 sensor ******************************************************************************/
