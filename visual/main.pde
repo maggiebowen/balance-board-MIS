@@ -4,19 +4,26 @@ Ball ball;
 PImage bg;
 HapticFeedback hapticFeedback;
 
+
+
 boolean applyHFB = true; // variable to apply haptic feedback --> set to false if testing without
 int currentLevel = 1; // Global variable to track the current level
+float radius = 30;
+float startPath = radius; // were the trail will begin
+float finishPath = 150; // distance to bottom to where trail ends
+float endTrail; 
 
 void setup() {
   //fullScreen();
   size(1500,900);
-  level = new Level(60, 1, 100);     // level with thickness 60, id 1
+  level = new Level(60, 1, 100, startPath, finishPath);     // level with thickness 60, id 1
   // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
   // mac: /dev/cu.usbmodem1101
   arduinoPort = new Serial(this, "COM3", 115200); //change the port name depending on Mac or Windows
-  ball = new Ball(this, arduinoPort, width / 2, 30, 30); 
+  ball = new Ball(this, arduinoPort, width / 2, radius, radius); 
   bg = loadImage("images/space-background-extended.png");
   
+  endTrail = height - finishPath - startPath;
   if (applyHFB){
     hapticFeedback = new HapticFeedback(ball, level, arduinoPort);
   }
@@ -35,8 +42,11 @@ void draw() {
   ball.move();
   ball.draw();
   
+  
   if (applyHFB) { // if providing user with haptic feedback
-    hapticFeedback.sendFeedback();
+    if (ball.position.y >= startPath && ball.position.y <= endTrail){ // if ball is within the trail's y axis
+      hapticFeedback.sendFeedback(endTrail);  
+    } 
   }
   
   
@@ -80,7 +90,7 @@ void draw() {
 }
 
 void changeLevel(float thickness, float id, float curveWidth, float velY) {
-   level = new Level(thickness, id, curveWidth);
+   level = new Level(thickness, id, curveWidth, 30, 150);
    ball.reset(width / 2, 30, velY); // Reset ball to initial position
    loop(); // Restart the draw loop
 }

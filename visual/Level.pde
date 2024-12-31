@@ -1,19 +1,20 @@
+
+
 class Level {
   ArrayList<PVector> path; // trajectory to be drawn
   float thickness;         // thickness of drawing
   float id;               // level number
-
-  Level(float thickness, float id, float curveWidth) {
+  
+  Level(float thickness, float id, float curveWidth, float startPath, float finishPath) {
     this.thickness = thickness;
     this.id = id;
     path = new ArrayList<PVector>();
-    generatePath(curveWidth);
+    generatePath(curveWidth, startPath, finishPath);
   }
   
-  void generatePath(float curveWidth) {  // curveWidth determines the width of the curves
-    float distance = 150;
-    float minY = 30;  // Start 30 pixels down from the top of the screen
-    float maxY = height - distance;
+  void generatePath(float curveWidth, float startPath, float finishPath) {  // curveWidth determines the width of the curves
+    float minY = startPath;  // Start 30 pixels down from the top of the screen
+    float maxY = height - finishPath;
 
     // generate a sinusoidal curve
     int totalCurves = 1;
@@ -24,8 +25,9 @@ class Level {
         float x = width / 2 + sin(y * frequency) * curveWidth;
         path.add(new PVector(x, y));
     }
-}
 
+}
+  
   // draw the shape
   void draw() {
     noFill();

@@ -38,6 +38,8 @@ class Ball {
     if (started) {
       //update the number of moves
       numberMoves += 1;
+      //print (numberMoves);
+      //print ("\n");
       // ball moves constantly down at speed 2 (could be modified)
       position.y += velY;
   
