@@ -29,6 +29,7 @@ class HapticFeedback {
       String command = "R" + 0 + "L" + 0 + "\n";
       arduinoPort.write(command); 
     }
+    
   }
   
 }

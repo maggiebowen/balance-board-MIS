@@ -20,7 +20,7 @@ class Level {
     int totalCurves = 1;
     float frequency = totalCurves * TWO_PI / height;
 
-    for (float y = minY; y < maxY; y += 5) {
+    for (float y = minY; y < maxY; y += 2) {
         // Adjust curve width using the curveWidth parameter
         float x = width / 2 + sin(y * frequency) * curveWidth;
         path.add(new PVector(x, y));
