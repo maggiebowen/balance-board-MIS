@@ -22,23 +22,24 @@ class HapticFeedback {
         int rightMotorIntensity = int(map(ballPositionX,levelPositionX,width,0,255)); //If the ball moves away from the path to the right, the motor on the right vibrates
         rightMotorIntensity = Math.max(rightMotorIntensity, 0);
         String command = "R" + rightMotorIntensity + "L" + leftMotorIntensity + "\n";
-        //print("command: ", command);
         arduinoPort.write(command); 
       } 
-    }else{ // When the game stops the vibration motors will stop
-      String command = "R" + 0 + "L" + 0 + "\n";
-      arduinoPort.write(command); 
     }
     
   }
   
-}
-
-float getXAtBallY(Level level, Ball ball) {
+  void stopFeedback(){// When the game stops the vibration motors will stop
+      String command = "R" + 0 + "L" + 0 + "\n";
+      arduinoPort.write(command);
+  }
+  
+  float getXAtBallY(Level level, Ball ball) {
     for (PVector position : level.path) { // go through all level points
         if (position.y == ball.position.y) { // find the matching x
             return position.x; // return it
         }
     }
     return -1; // if not found, return -1
+  }
+  
 }
