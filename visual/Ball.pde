@@ -43,7 +43,7 @@ class Ball {
       // ball moves constantly down at speed 2 (could be modified)
       position.y += velY;
   
-      // lateral movement (will be changed in future for sensors)
+      // lateral movement
       if (myPort.available() > 0) {
         String val = myPort.readStringUntil('\n');
         
@@ -54,9 +54,8 @@ class Ball {
             float orientationYFloat = Float.parseFloat(orientationY); // convert to float
             velX = PApplet.map(orientationYFloat, -90, 90, -50, 50); // map angle to horizontal displacement
             velX = (int) -velX; // change to negative (for orientation purposes) and pass to integer 
-   
           } catch (NumberFormatException e) {
-            parent.println("Error parsing IMU data");
+            // parent.println("Error parsing IMU data");
           }
         }
       }
