@@ -17,10 +17,18 @@ class HapticFeedback {
       //float levelPositionX = level.path.get(ball.numberMoves).x; //The path and the ball have the same quantity of xy vectors
       
       if (levelPositionX != -1){
-        int leftMotorIntensity = int(map(ballPositionX,0,levelPositionX,255,0)); //If the ball moves away from the path to the left, the motor on the left vibrates
+        int deadZone = 30;
+        
+        int leftMotorIntensity = int(map(ballPositionX,0,levelPositionX,250,50)); //If the ball moves away from the path to the left, the motor on the left vibrates
         leftMotorIntensity = Math.max(leftMotorIntensity, 0);//Avoid sending negative values to the vibration motor
-        int rightMotorIntensity = int(map(ballPositionX,levelPositionX,width,0,255)); //If the ball moves away from the path to the right, the motor on the right vibrates
+        int rightMotorIntensity = int(map(ballPositionX,levelPositionX,width,50,250)); //If the ball moves away from the path to the right, the motor on the right vibrates
         rightMotorIntensity = Math.max(rightMotorIntensity, 0);
+        
+        if (Math.abs(ballPositionX - levelPositionX) < deadZone) {
+            leftMotorIntensity = 0;
+            rightMotorIntensity = 0;
+        }
+        
         String command = "R" + rightMotorIntensity + "L" + leftMotorIntensity + "\n";
         arduinoPort.write(command); 
       } 

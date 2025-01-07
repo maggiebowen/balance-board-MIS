@@ -56,7 +56,9 @@ float  correction_z = 0; // 1.25;
 /* Vibration motors ***************************************************************************************************/
 
 int right_motor_pin = 9;
-int left_motor_pin = 10; 
+int left_motor_pin = 10;
+int right_motor_pin_2 = 11;
+int left_motor_pin_2 = 12;  
 int right_motor_intensity = 0;
 int left_motor_intensity = 0;  
 
@@ -137,7 +139,9 @@ void loop() {
 
       // Write the intensities to the motors
       analogWrite(right_motor_pin, right_motor_intensity);
+      analogWrite(right_motor_pin_2, right_motor_intensity);
       analogWrite(left_motor_pin, left_motor_intensity);
+      analogWrite(left_motor_pin_2, left_motor_intensity);
     }
   }
 
