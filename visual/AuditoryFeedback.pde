@@ -10,7 +10,7 @@ class AuditoryFeedback {
   OscP5 oscP5;
   NetAddress pureData;
   
-  boolean playSound;
+  boolean playSound = true;
 
   AuditoryFeedback(Ball ball, Level level, int PDPort) {
     this.ball = ball;
@@ -24,6 +24,7 @@ class AuditoryFeedback {
   }
   
   void sendFeedback(float endTrail) {
+    print (playSound);
     if (ball.numberMoves >=0 && ball.numberMoves<(endTrail/2) && (playSound)){ //movements quantity that can be done in the path distance
       float ballPositionX = ball.position.x;
       

@@ -105,8 +105,12 @@ class Ball {
     parent.strokeWeight(this.radius * 2); // match with the ball's diameter
     parent.strokeJoin(BEVEL);
     parent.beginShape();
+    
     for (PVector p : trajectory) {
-      parent.vertex(p.x, p.y);
+      if (p.y >= this.radius * 5 && p.y <= height-this.radius*5){
+        parent.vertex(p.x, p.y);
+      }
+      
     }
     parent.endShape();
 

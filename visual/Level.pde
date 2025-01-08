@@ -17,7 +17,7 @@ class Level {
     float maxY = height - finishPath;
 
     // generate a sinusoidal curve
-    int totalCurves = 1;
+    int totalCurves = 3;
     float frequency = totalCurves * TWO_PI / height;
 
     for (float y = minY; y < maxY; y += 2) {

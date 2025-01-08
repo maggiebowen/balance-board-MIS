@@ -1,4 +1,4 @@
-#N canvas 15 0 3168 1820 10;
+#N canvas 15 0 3168 1805 10;
 #X msg 19 22 \; pd dsp 1;
 #X msg 27 77 \; pd dsp 0;
 #X text 98 18 <-Click to start DSP;
