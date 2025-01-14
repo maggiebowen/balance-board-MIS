@@ -24,7 +24,6 @@ class AuditoryFeedback {
   }
   
   void sendFeedback(float endTrail) {
-    print (playSound);
     if (ball.numberMoves >=0 && ball.numberMoves<(endTrail/2) && (playSound)){ //movements quantity that can be done in the path distance
       float ballPositionX = ball.position.x;
       
@@ -51,7 +50,6 @@ class AuditoryFeedback {
   
   // Function to start the sound
   void startFeedback() {
-    print ("STARTED");
     OscMessage msg = new OscMessage("/distance");
     msg.add(11000); // Turn DSP off
     oscP5.send(msg, pureData);

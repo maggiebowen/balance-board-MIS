@@ -1,6 +1,8 @@
 Serial arduinoPort; // Create object to communicate with Arduino
 Level level;
 Ball ball;
+
+
 PImage bg;
 HapticFeedback hapticFeedback;
 AuditoryFeedback auditoryFeedback;
@@ -10,7 +12,7 @@ boolean applyAFB = true; // variable to apply auditory feedback
 
 int PDPort = 12000;
 
-int currentLevel = 1; // Global variable to track the current level
+int currentDifficulty = 1; // Global variable to track the level's difficulty
 float radius = 30;
 float startPath = radius*5; // were the trail will begin
 float finishPath = radius*5; // distance to bottom to where trail ends
@@ -27,7 +29,7 @@ void setup() {
   // mac: /dev/cu.usbmodem1101
   // arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
   arduinoPort = new Serial(this, "COM3", 115200); //change the port name depending on Mac or Windows
-  ball = new Ball(this, arduinoPort, width / 2, radius, radius); 
+  ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty); 
   bg = loadImage("images/space-background-extended.png");
   
   //endTrail = height - finishPath - startPath;
@@ -40,8 +42,6 @@ void setup() {
   if (applyAFB){
       
     auditoryFeedback = new AuditoryFeedback(ball, level, PDPort);
-    print ("AuditoryFeedback!");
-    print ("\n");
   }
 
 }
@@ -50,6 +50,9 @@ void draw() {
   background(bg); // background image
 
   // draw the level (the trajectory to be drawn)
+  if (currentDifficulty == 3){
+    level.updateAliens();
+  }
   level.draw();
   
   // show info of level
@@ -84,7 +87,7 @@ void draw() {
     // stop the feedback
     applyHFB = false;
     // Calculate the accuracy of the player's trajectory    
-    float accuracy = level.calculateAccuracy(ball);
+    float accuracy = level.calculateAccuracy(level, ball);
     println("Accuracy: " + accuracy + "%");
     
     // Display the accuracy information in the center of the screen
@@ -93,25 +96,28 @@ void draw() {
     textSize(100);
     text("ACCURACY: " + int(accuracy) + "%", width / 2, height / 2);
     
-    noLoop();
+    
+    currentDifficulty++;
+    
+    if (currentDifficulty == 2){ // increased velocity
+      level = new Level(60, 1, 100, startPath, finishPath);
+      ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
+    
+    }
+    else if (currentDifficulty == 3){ // add aliens
+      level = new Level(60, 1, 100, startPath, finishPath);
+      ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
+      level.generateAliens(3);
+    }
+    else {
+      noLoop();
+    }
+    
    
   }
   
-  // logic:
-  // draw instructions
-  // draw level one, make it slower that it currently is
-  // if accuracy is 50% or higher, draw next level and reset ball (changeLevel function)
-    // include a change in ball velcoity 
-  // if next level, increase level id by 1, increase 
   
 }
-
-void changeLevel(float thickness, float id, float curveWidth, float velY) {
-   level = new Level(thickness, id, curveWidth, 30, 150);
-   ball.reset(width / 2, 30, velY); // Reset ball to initial position
-   loop(); // Restart the draw loop
-}
-
 
 // show Level X (depending on the level)
 void showInfo(){

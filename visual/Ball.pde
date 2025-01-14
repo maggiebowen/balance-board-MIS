@@ -14,12 +14,18 @@ class Ball {
   PImage astroImage;           // astronaut image 
   int numberMoves;            //to indicate how many move the ball has made
 
-  Ball(PApplet parent, Serial arduinoPort, float startX, float startY, float radius) {
+  Ball(PApplet parent, Serial arduinoPort, float startX, float startY, float radius, int difficulty) {
     this.parent = parent;      // store the parent sketch reference
     this.position = new PVector(startX, startY);
     this.trajectory = new ArrayList<PVector>();
     this.radius = radius;
-    this.velY = 2;             // default vertical speed
+    
+    if (difficulty == 1){
+      this.velY = 2; 
+    } else {
+      this.velY = 3;
+    }
+                
     this.velX = 0;             // initially, it is not falling
     this.started = false;
     this.startTime = parent.millis();
@@ -76,27 +82,6 @@ class Ball {
     }
   }
 
-  // reset ball for next level
-  void reset(float startX, float startY, float velY) {
-    // Reset position to the starting coordinates
-    position.set(startX, startY);
-
-    // Clear trajectory to remove old paths
-    trajectory.clear();
-
-    // Reset velocities
-    velY = 2;  // Default vertical speed
-    velX = 0;  // No horizontal movement initially
-
-    // Reset time and movement state
-    startTime = parent.millis();
-    started = false;
-
-    // Optionally, clear serial buffer to avoid leftover data
-    if (myPort != null && myPort.available() > 0) {
-        myPort.clear();
-    }
-  }
   
   // drawing trajectory
   void draw() {
