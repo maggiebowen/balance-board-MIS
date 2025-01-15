@@ -22,8 +22,10 @@ float endTrail;
 void setup() {
   //fullScreen();
   size(1500,900);
-  level = new Level(60, 1, 100, startPath, finishPath);     // level with thickness 60, id 1
-  // level = new Level2(...)
+  // level = new SineWaveLevel(60, 1);     // level with thickness 60, id 1
+  level = new ZigzagLevel(60,1);
+  level.generatePath(100, startPath, finishPath);
+
   
   // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
   // mac: /dev/cu.usbmodem1101
@@ -100,12 +102,16 @@ void draw() {
     currentDifficulty++;
     
     if (currentDifficulty == 2){ // increased velocity
-      level = new Level(60, 1, 100, startPath, finishPath);
+      level = new SineWaveLevel(60, 1);
+      // level = new ZigZagLevel(60, 1);
+      level.generatePath(100, startPath, finishPath);
       ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
     
     }
     else if (currentDifficulty == 3){ // add aliens
-      level = new Level(60, 1, 100, startPath, finishPath);
+      level = new SineWaveLevel(60, 1);
+      // level = new ZigZagLevel(60, 1);
+      level.generatePath(100, startPath, finishPath);
       ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
       level.generateAliens(3);
     }

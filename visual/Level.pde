@@ -1,38 +1,23 @@
-class Level {
+// Superclass
+abstract class Level {
   ArrayList<PVector> path; // trajectory to be drawn
   float thickness;         // thickness of drawing
-  float id;               // level number
+  float id;                // level number
   ArrayList<PVector> alienPositions; // Store alien positions
   float alienRadius;       // Radius of aliens
   ArrayList<PVector> alienVelocities; // Store velocities of aliens
 
-  Level(float thickness, float id, float curveWidth, float startPath, float finishPath) {
+  Level(float thickness, float id) {
     this.thickness = thickness;
     this.id = id;
-    this.alienRadius = 20; // Default radius for aliens
+    this.alienRadius = thickness; // will be equal to the spaceship
     path = new ArrayList<PVector>();
     alienPositions = new ArrayList<PVector>();
     alienVelocities = new ArrayList<PVector>();
-    generatePath(curveWidth, startPath, finishPath);
   }
 
-  void generatePath(float curveWidth, float startPath, float finishPath) {  // curveWidth determines the width of the curves
-    float minY = startPath;  // Start 30 pixels down from the top of the screen
-    float maxY = height - finishPath;
+  abstract void generatePath(float curveWidth, float startPath, float finishPath); // Abstract method
 
-    // generate a sinusoidal curve
-    int totalCurves = 3;
-    float frequency = totalCurves * TWO_PI / height;
-
-    for (float y = minY; y < maxY; y += 2) {
-        // Adjust curve width using the curveWidth parameter
-        float x = width / 2 + sin(y * frequency) * curveWidth;
-        path.add(new PVector(x, y));
-    }
-
-  }
-
-  // draw the shape
   void draw() {
     noFill();
     stroke(255, 224, 55, 150);
@@ -77,49 +62,94 @@ class Level {
     }
   }
 
-  // check accuracy 
   float calculateAccuracy(Level level, Ball ball) {
     int pointsCovered = 0;
     int totalPoints = level.path.size();
 
     for (PVector p : level.path) {
-      // see if level point is within trajectory of ball
       for (PVector ballPoint : ball.trajectory) {
-        // if the distance between each point of the level is lower than the radius
-        // ball.radius/2 can be used maybe, if not a bit easy?
-        if (dist(p.x, p.y, ballPoint.x, ballPoint.y) <= ball.radius / 2) { 
-          pointsCovered++; // increase the count
-          break; 
+        if (dist(p.x, p.y, ballPoint.x, ballPoint.y) <= ball.radius / 2) {
+          pointsCovered++;
+          break;
         }
       }
     }
 
-    return (float) pointsCovered / totalPoints * 100; // return the % of covered points
-  }
-
-  // Helper function: Calculate the shortest distance from a point to a line segment
-  float distToSegment(PVector p, PVector v, PVector w) {
-    float l2 = sq(dist(v.x, v.y, w.x, w.y)); // Squared length of segment
-    if (l2 == 0) return dist(p.x, p.y, v.x, v.y); // Segment is a point
-    float t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
-    t = constrain(t, 0, 1); // Clamp t to the segment
-    PVector projection = new PVector(v.x + t * (w.x - v.x), v.y + t * (w.y - v.y));
-    return dist(p.x, p.y, projection.x, projection.y);
+    return (float) pointsCovered / totalPoints * 100;
   }
 
   void generateAliens(int numberOfAliens) {
     alienPositions.clear(); // Clear any existing aliens
     alienVelocities.clear(); // Clear any existing velocities
     for (int i = 0; i < numberOfAliens; i++) {
-      // Place aliens at random positions on the screen
       float x = random(alienRadius, width - alienRadius);
       float y = random(alienRadius, height - alienRadius);
       alienPositions.add(new PVector(x, y));
 
-      // Assign random initial velocities
       float vx = random(-2, 2);
       float vy = random(-2, 2);
       alienVelocities.add(new PVector(vx, vy));
+    }
+  }
+}
+
+
+class SineWaveLevel extends Level {
+  SineWaveLevel(float thickness, float id) {
+    super(thickness, id);
+  }
+
+  @Override
+  void generatePath(float curveWidth, float startPath, float finishPath) {
+    path.clear(); // Clear previous path
+    float minY = startPath;
+    float maxY = height - finishPath;
+
+    // Frequency based on total height
+    int totalCurves = 3;
+    float frequency = totalCurves * TWO_PI / height;
+
+    for (float y = minY; y < maxY; y += 2) { // Fixed increment for y
+      float x = width / 2 + sin(y * frequency) * curveWidth;
+      path.add(new PVector(x, y));
+    }
+  }
+}
+
+
+class ZigzagLevel extends Level {
+  ZigzagLevel(float thickness, float id) {
+    super(thickness, id);
+  }
+
+  @Override
+  void generatePath(float curveWidth, float startPath, float finishPath) {
+    path.clear(); // Clear previous path
+    float minY = startPath;
+    float maxY = height - finishPath;
+
+    float segmentLength = (maxY - minY) / 4; // Divide vertical space into 4 equal segments
+
+    for (float y = minY; y < maxY; y += 2) { // Fixed increment for y
+      // Determine the segment length for each section of the zigzag
+      float segmentProgress = (y - minY) % segmentLength / segmentLength; // Progress in current segment
+      float x;
+    
+      if (y < minY + segmentLength) {
+        // Move down center
+        x = width / 2;
+      } else if (y < minY + 2 * segmentLength) {
+        // Smooth transition to the left
+        x = width / 2 - curveWidth * sin(segmentProgress * HALF_PI); // Use sin to ease left
+      } else if (y < minY + 3 * segmentLength) {
+        // Smooth transition to the right
+        x = width / 2 + curveWidth * sin(segmentProgress * HALF_PI); // Use sin to ease right
+      } else {
+        // Back to center
+        x = width / 2 + curveWidth * cos(segmentProgress * PI); // Smoothly return to center
+      }
+    
+      path.add(new PVector(x, y)); // Add the point to the path
     }
   }
 }
