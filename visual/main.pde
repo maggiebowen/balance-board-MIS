@@ -22,8 +22,8 @@ float endTrail;
 void setup() {
   //fullScreen();
   size(1500,900);
-  // level = new SineWaveLevel(60, 1);     // level with thickness 60, id 1
-  level = new ZigzagLevel(60,1);
+  level = new SineWaveLevel(60, 1);     // level with thickness 60, id 1
+  //level = new ZigzagLevel(60,1);
   level.generatePath(100, startPath, finishPath);
 
   
@@ -36,15 +36,7 @@ void setup() {
   
   //endTrail = height - finishPath - startPath;
   endTrail = height - finishPath;
-  
-  if (applyHFB){
-    hapticFeedback = new HapticFeedback(ball, level, arduinoPort);
-  }
-  
-  if (applyAFB){
-      
-    auditoryFeedback = new AuditoryFeedback(ball, level, PDPort);
-  }
+  applyFeedbacks();
 
 }
 
@@ -86,8 +78,6 @@ void draw() {
   // Check if the level is complete (when the ball falls off the screen)
   if (ball.position.y > height) {
     
-    // stop the feedback
-    applyHFB = false;
     // Calculate the accuracy of the player's trajectory    
     float accuracy = level.calculateAccuracy(level, ball);
     println("Accuracy: " + accuracy + "%");
@@ -118,6 +108,7 @@ void draw() {
     else {
       noLoop();
     }
+    applyFeedbacks();
     
    
   }
@@ -132,4 +123,13 @@ void showInfo(){
   textAlign(RIGHT,TOP);
   textSize(50);
   text("Level " + int(level.id), width - 50, 50);
+}
+
+void applyFeedbacks(){
+    if (applyHFB){
+      hapticFeedback = new HapticFeedback(ball, level, arduinoPort);
+    }
+    if (applyAFB){
+      auditoryFeedback = new AuditoryFeedback(ball, level, PDPort);
+    }
 }
