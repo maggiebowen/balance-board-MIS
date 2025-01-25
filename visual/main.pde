@@ -2,6 +2,10 @@ Serial arduinoPort; // Create object to communicate with Arduino
 Level level;
 Ball ball;
 
+PrintWriter output; // for writing in the txt file
+String date;
+String time;
+String filePath; // name of file used for saving results
 
 PImage bg;
 HapticFeedback hapticFeedback;
@@ -23,7 +27,7 @@ void setup() {
   //fullScreen();
   size(1500,900);
   level = new SineWaveLevel(60, 1);     // level with thickness 60, id 1
-  //level = new ZigzagLevel(60,1);
+  //level = new ZigzagLevel(60,2);
   level.generatePath(100, startPath, finishPath);
 
   
@@ -37,7 +41,11 @@ void setup() {
   //endTrail = height - finishPath - startPath;
   endTrail = height - finishPath;
   applyFeedbacks();
-
+  
+  date = nf(day(), 2) + "-" + nf(month(), 2); // Format: "day-month"
+  time = nf(hour(), 2) + "-" + nf(minute(), 2) + "-" + nf(second(), 2); // Format: "hour:minute:seconds"
+  
+  
 }
 
 void draw() {
@@ -76,21 +84,24 @@ void draw() {
   
   
   // Check if the level is complete (when the ball falls off the screen)
-  if (ball.position.y > height) {
+  if (ball.position.y >= height) {
     
     // Calculate the accuracy of the player's trajectory    
     float accuracy = level.calculateAccuracy(level, ball);
-    println("Accuracy: " + accuracy + "%");
     
-    // Display the accuracy information in the center of the screen
-    fill(0);
-    textAlign(CENTER, CENTER);
-    textSize(100);
-    text("ACCURACY: " + int(accuracy) + "%", width / 2, height / 2);
+    String fileName = date + "---" + time + "-" + currentDifficulty+ ".txt"; // Format: "date---time.txt"
+
+    filePath = "../results/"+fileName;
+    // write the accuracy results
+    output = createWriter(filePath); // open the file
+    output.println("Level: " + level.id);
+    output.println("Difficulty type "+currentDifficulty + ": ");
+    output.println(accuracy+"\n");
+    output.close();
     
     
+    // increase difficulty
     currentDifficulty++;
-    
     if (currentDifficulty == 2){ // increased velocity
       level = new SineWaveLevel(60, 1);
       // level = new ZigZagLevel(60, 1);
@@ -105,8 +116,9 @@ void draw() {
       ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
       level.generateAliens(3);
     }
-    else {
+    else { 
       noLoop();
+      
     }
     applyFeedbacks();
     
