@@ -31,10 +31,10 @@ class Ball {
     this.position = new PVector(startX, startY);
     this.trajectory = new ArrayList<PVector>();
     
-    if (difficulty == 1){
+    if (difficulty == 1) {
       this.velY = 1; 
     } else {
-      this.velY = 2;
+      this.velY = 0.5 + (difficulty - 1) * 0.5;
     }
                 
     this.velX = 0;             // initially, it is not falling
