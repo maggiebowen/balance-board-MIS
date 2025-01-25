@@ -36,7 +36,7 @@ void setup() {
   // arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
   arduinoPort = new Serial(this, "COM3", 115200); //change the port name depending on Mac or Windows
   ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty); 
-  bg = loadImage("images/space-background-extended.png");
+  bg = loadImage("images/space-background-resize.png.png");
   
   //endTrail = height - finishPath - startPath;
   endTrail = height - finishPath;
