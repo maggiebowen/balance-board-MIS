@@ -55,7 +55,14 @@ class Ball {
       numberMoves += 1;
 
       // ball moves constantly down at speed velY
-      position.y += velY;
+      //position.y += velY;
+      
+      // Stop the ball before it reaches 50 pixels from the bottom
+        if (position.y + radius < parent.height - 50) {
+            position.y += velY; // Continue vertical movement
+        } else {
+            velY = 0; // Stop vertical movement once the limit is reached
+        }
   
       // lateral movement
       if (myPort.available() > 0) {
