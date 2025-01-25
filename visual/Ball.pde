@@ -12,18 +12,29 @@ class Ball {
   String orientationY = "";   // IMU's value received (pitch at Y direction)
   PApplet parent;             // reference to the parent sketch
   PImage astroImage;           // astronaut image 
-  int numberMoves;            //to indicate how many move the ball has made
+  int numberMoves;            // to indicate how many moves the ball has made
 
   Ball(PApplet parent, Serial arduinoPort, float startX, float startY, float radius, int difficulty) {
     this.parent = parent;      // store the parent sketch reference
+    
+    this.radius = radius;
+    this.astroImage = parent.loadImage("images/astronaut.png");
+    
+    // Adjust start position to ensure the astronaut image stays fully on screen
+    float halfImageWidth = astroImage.width / 2;   // Half the astronaut image width
+    float halfImageHeight = astroImage.height / 2; // Half the astronaut image height
+    
+    // Constrain starting position within screen bounds
+    startX = PApplet.constrain(startX, halfImageWidth, parent.width - halfImageWidth);
+    startY = PApplet.constrain(startY, halfImageHeight, parent.height - halfImageHeight);
+    
     this.position = new PVector(startX, startY);
     this.trajectory = new ArrayList<PVector>();
-    this.radius = radius;
     
     if (difficulty == 1){
-      this.velY = 2; 
+      this.velY = 1; 
     } else {
-      this.velY = 3;
+      this.velY = 2;
     }
                 
     this.velX = 0;             // initially, it is not falling
@@ -31,22 +42,19 @@ class Ball {
     this.startTime = parent.millis();
     this.myPort = arduinoPort;
     this.numberMoves = 0;
-    
-    astroImage = parent.loadImage("images/astronaut.png");
   }
 
   void move() {
-    // start if time is over 3 second
+    // start if time is over 3 seconds
     if (!started && parent.millis() - startTime >= 3000) {
       started = true; 
     }
     
     if (started) {
-      //update the number of moves
+      // update the number of moves
       numberMoves += 1;
-      //print (numberMoves);
-      //print ("\n");
-      // ball moves constantly down at speed 2 (could be modified)
+
+      // ball moves constantly down at speed velY
       position.y += velY;
   
       // lateral movement
@@ -82,7 +90,6 @@ class Ball {
     }
   }
 
-  
   // drawing trajectory
   void draw() {
     parent.noFill();
@@ -92,15 +99,14 @@ class Ball {
     parent.beginShape();
     
     for (PVector p : trajectory) {
-      if (p.y >= this.radius * 5 && p.y <= height-this.radius*5){
+      if (p.y >= this.radius * 5 && p.y <= height - this.radius * 5){
         parent.vertex(p.x, p.y);
       }
-      
     }
     parent.endShape();
 
     // draw ball as an astronaut image
     parent.imageMode(PApplet.CENTER); // Center the image on its position
-    parent.image(astroImage, position.x, position.y, radius * 2, radius * 2);
+    parent.image(astroImage, position.x, position.y, astroImage.width, astroImage.height);
   }
 }
