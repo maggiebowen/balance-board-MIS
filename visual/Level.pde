@@ -108,10 +108,28 @@ abstract class Level {
     }
 }
 
-
-
 }
 
+
+class TutorialLevel extends Level {
+  TutorialLevel(float thickness, float id, PImage alien1, PImage alien2, PImage alien3) {
+    super(thickness, id, alien1, alien2, alien3);
+  }
+
+  @Override
+  void generatePath(float curveWidth, float startPath, float finishPath) {
+    path.clear(); // Clear any previous path
+
+    float minY = startPath;
+    float maxY = height - finishPath;
+
+    // Just step down in y, staying at a fixed x (e.g., the center of the screen)
+    for (float y = minY; y < maxY; y += 2) {
+      float x = width / 2;
+      path.add(new PVector(x, y));
+    }
+  }
+}
 
 class SineWaveLevel extends Level {
   SineWaveLevel(float thickness, float id, PImage alien1, PImage alien2, PImage alien3) {
