@@ -20,10 +20,18 @@ class Ball {
     this.trajectory = new ArrayList<PVector>();
     this.radius = radius;
     
-    if (difficulty == 1){
-      this.velY = 2; 
+    // Adjust start position to ensure the astronaut image stays fully on screen
+    float halfImageWidth = astroImage.width / 2;   // Half the astronaut image width
+    float halfImageHeight = astroImage.height / 2; // Half the astronaut image height
+    
+    // Constrain starting position within screen bounds
+    startX = PApplet.constrain(startX, halfImageWidth, parent.width - halfImageWidth);
+    startY = PApplet.constrain(startY, halfImageHeight, parent.height - halfImageHeight);
+    
+    if (difficulty == 1) {
+      this.velY = 1; 
     } else {
-      this.velY = 3;
+      this.velY = 0.5 + (difficulty - 1) * 0.5;
     }
                 
     this.velX = 0;             // initially, it is not falling
@@ -101,6 +109,6 @@ class Ball {
 
     // draw ball as an astronaut image
     parent.imageMode(PApplet.CENTER); // Center the image on its position
-    parent.image(astroImage, position.x, position.y, radius * 2, radius * 2);
+    parent.image(astroImage, position.x, position.y, astroImage.width, astroImage.height);
   }
 }

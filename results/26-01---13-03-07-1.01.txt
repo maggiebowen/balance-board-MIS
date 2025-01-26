@@ -1,0 +1,6 @@
+Level: 1.0
+Difficulty type 1: 
+Auditory feedback: false
+Haptic feedback: false
+20.333334
+
