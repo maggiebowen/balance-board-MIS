@@ -132,7 +132,6 @@ class TutorialLevel extends Level {
 }
 
 class easyLevel extends Level {
-
   easyLevel(float thickness, float id, PImage alien1, PImage alien2, PImage alien3) {
     super(thickness, id, alien1, alien2, alien3);
   }
@@ -167,10 +166,46 @@ class easyLevel extends Level {
   }
 }
 
+class mediumLevel extends Level {
+  mediumLevel(float thickness, float id, PImage alien1, PImage alien2, PImage alien3) {
+    super(thickness, id, alien1, alien2, alien3);
+  }
 
+  @Override
+  void generatePath(float curveWidth, float startPath, float finishPath) {
+    path.clear(); // Clear any previous path
 
-class SineWaveLevel extends Level {
-  SineWaveLevel(float thickness, float id, PImage alien1, PImage alien2, PImage alien3) {
+    // We'll place the path between these Y limits
+    float minY = startPath;
+    float maxY = height - finishPath;
+
+    // Number of full sine-wave cycles from minY to maxY
+    int totalCurves = 1;
+
+    // The total vertical distance for the path
+    float pathLength = maxY - minY;
+
+    // We want exactly 'totalCurves' cycles over 'pathLength'
+    float frequency = totalCurves * TWO_PI / pathLength;
+
+    // Multiply curveWidth by 2.0 (or any factor) to make the path wider
+    float amplitude = curveWidth * 2.0;
+
+    // Build the path in small increments
+    for (float y = minY; y < maxY; y += 2) {
+      // Shift y so that at y = minY, the sine begins at sin(0) = 0
+      float relativeY = y - minY;
+
+      // Center horizontally at width/2; use 'amplitude' for extra width
+      float x = width / 2 + sin(relativeY * frequency) * amplitude;
+
+      path.add(new PVector(x, y));
+    }
+  }
+}
+
+class hardLevel extends Level {
+  hardLevel(float thickness, float id, PImage alien1, PImage alien2, PImage alien3) {
     super(thickness, id, alien1, alien2, alien3);
   }
 
@@ -187,44 +222,6 @@ class SineWaveLevel extends Level {
     for (float y = minY; y < maxY; y += 2) { // Fixed increment for y
       float x = width / 2 + sin(y * frequency) * curveWidth;
       path.add(new PVector(x, y));
-    }
-  }
-}
-
-
-class ZigzagLevel extends Level {
-  ZigzagLevel(float thickness, float id, PImage alien1, PImage alien2, PImage alien3) {
-    super(thickness, id, alien1, alien2, alien3);
-  }
-
-  @Override
-  void generatePath(float curveWidth, float startPath, float finishPath) {
-    path.clear(); // Clear previous path
-    float minY = startPath;
-    float maxY = height - finishPath;
-
-    float segmentLength = (maxY - minY) / 4; // Divide vertical space into 4 equal segments
-
-    for (float y = minY; y < maxY; y += 2) { // Fixed increment for y
-      // Determine the segment length for each section of the zigzag
-      float segmentProgress = (y - minY) % segmentLength / segmentLength; // Progress in current segment
-      float x;
-    
-      if (y < minY + segmentLength) {
-        // Move down center
-        x = width / 2;
-      } else if (y < minY + 2 * segmentLength) {
-        // Smooth transition to the left
-        x = width / 2 - curveWidth * sin(segmentProgress * HALF_PI); // Use sin to ease left
-      } else if (y < minY + 3 * segmentLength) {
-        // Smooth transition to the right
-        x = width / 2 + curveWidth * sin(segmentProgress * HALF_PI); // Use sin to ease right
-      } else {
-        // Back to center
-        x = width / 2 + curveWidth * cos(segmentProgress * PI); // Smoothly return to center
-      }
-    
-      path.add(new PVector(x, y)); // Add the point to the path
     }
   }
 }

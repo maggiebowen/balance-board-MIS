@@ -269,15 +269,15 @@ void initializeSecondLevelGameScreen() {
   endTrail = height - finishPath;
 
   if (currentDifficulty == 1) {
-    level = new ZigzagLevel(60, 2, alien1, alien2, alien3);
+    level = new hardLevel(60, 2, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
   } else if (currentDifficulty == 2) {
-    level = new ZigzagLevel(60, 2, alien1, alien2, alien3);
+    level = new hardLevel(60, 2, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
   } else if (currentDifficulty == 3) {
-    level = new ZigzagLevel(60, 2, alien1, alien2, alien3);
+    level = new hardLevel(60, 2, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
     level.generateAliens();
