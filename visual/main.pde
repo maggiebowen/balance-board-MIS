@@ -16,6 +16,9 @@ String filePath; // name of file used for saving results
 
 PImage bg;
 PImage initScreenBg;
+PImage alien1;
+PImage alien2;
+PImage alien3;
 HapticFeedback hapticFeedback; // haptic Feedback
 AuditoryFeedback auditoryFeedback; // auditory feedback
 
@@ -32,6 +35,12 @@ float endTrail;           // were the trail of the level ends
 
 void setup() {
   size(1500,900);
+  
+  // Load alien images
+  alien1 = loadImage("images/alien1.png");
+  alien2 = loadImage("images/alien2.png");
+  alien3 = loadImage("images/alien3.png");
+  
   // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
   // mac: /dev/cu.usbmodem1101
   //arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
@@ -236,15 +245,15 @@ void initializeGameScreen() {
   endTrail = height - finishPath;
 
   if (currentDifficulty == 1) {
-    level = new SineWaveLevel(60, 1);
+    level = new SineWaveLevel(60, 1, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
   } else if (currentDifficulty == 2) {
-    level = new SineWaveLevel(60, 1);
+    level = new SineWaveLevel(60, 1, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
   } else if (currentDifficulty == 3) {
-    level = new SineWaveLevel(60, 1);
+    level = new SineWaveLevel(60, 1, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
     level.generateAliens();
@@ -260,15 +269,15 @@ void initializeSecondLevelGameScreen() {
   endTrail = height - finishPath;
 
   if (currentDifficulty == 1) {
-    level = new ZigzagLevel(60, 2);
+    level = new ZigzagLevel(60, 2, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
   } else if (currentDifficulty == 2) {
-    level = new ZigzagLevel(60, 2);
+    level = new ZigzagLevel(60, 2, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
   } else if (currentDifficulty == 3) {
-    level = new ZigzagLevel(60, 2);
+    level = new ZigzagLevel(60, 2, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
     level.generateAliens();

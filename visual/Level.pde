@@ -36,10 +36,11 @@ abstract class Level {
     endShape();
 
     // Draw aliens
-    fill(255, 0, 0); // Red color for aliens
-    noStroke();
-    for (PVector alien : alienPositions) {
-      ellipse(alien.x, alien.y, alienRadius * 2, alienRadius * 2);
+    for (int i = 0; i < alienPositions.size(); i++) {
+      PVector alien = alienPositions.get(i);
+      PImage alienImg = alienImages.get(i); // Get the corresponding image
+      imageMode(CENTER); // Center the image on the alien position
+      image(alienImg, alien.x, alien.y, alienRadius * 2, alienRadius * 2); // Scale to fit alien size
     }
   }
 
@@ -113,8 +114,8 @@ abstract class Level {
 
 
 class SineWaveLevel extends Level {
-  SineWaveLevel(float thickness, float id) {
-    super(thickness, id);
+  SineWaveLevel(float thickness, float id, PImage alien1, PImage alien2, PImage alien3) {
+    super(thickness, id, alien1, alien2, alien3);
   }
 
   @Override
@@ -136,8 +137,8 @@ class SineWaveLevel extends Level {
 
 
 class ZigzagLevel extends Level {
-  ZigzagLevel(float thickness, float id) {
-    super(thickness, id);
+  ZigzagLevel(float thickness, float id, PImage alien1, PImage alien2, PImage alien3) {
+    super(thickness, id, alien1, alien2, alien3);
   }
 
   @Override
