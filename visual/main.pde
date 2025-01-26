@@ -238,15 +238,15 @@ void initializeGameScreen() {
   if (currentDifficulty == 1) {
     level = new SineWaveLevel(60, 1);
     level.generatePath(100, startPath, finishPath);
-    ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
+    ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
   } else if (currentDifficulty == 2) {
     level = new SineWaveLevel(60, 1);
     level.generatePath(100, startPath, finishPath);
-    ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
+    ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
   } else if (currentDifficulty == 3) {
     level = new SineWaveLevel(60, 1);
     level.generatePath(100, startPath, finishPath);
-    ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
+    ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
     level.generateAliens(3);
   } else {
     noLoop();

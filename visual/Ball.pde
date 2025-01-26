@@ -20,14 +20,6 @@ class Ball {
     this.trajectory = new ArrayList<PVector>();
     this.radius = radius;
     
-    // Adjust start position to ensure the astronaut image stays fully on screen
-    float halfImageWidth = astroImage.width / 2;   // Half the astronaut image width
-    float halfImageHeight = astroImage.height / 2; // Half the astronaut image height
-    
-    // Constrain starting position within screen bounds
-    startX = PApplet.constrain(startX, halfImageWidth, parent.width - halfImageWidth);
-    startY = PApplet.constrain(startY, halfImageHeight, parent.height - halfImageHeight);
-    
     if (difficulty == 1) {
       this.velY = 1; 
     } else {
