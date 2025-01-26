@@ -123,13 +123,51 @@ class TutorialLevel extends Level {
     float minY = startPath;
     float maxY = height - finishPath;
 
-    // Just step down in y, staying at a fixed x (e.g., the center of the screen)
+    // Just step down in y, staying at a fixed x
     for (float y = minY; y < maxY; y += 2) {
       float x = width / 2;
       path.add(new PVector(x, y));
     }
   }
 }
+
+class easyLevel extends Level {
+
+  easyLevel(float thickness, float id, PImage alien1, PImage alien2, PImage alien3) {
+    super(thickness, id, alien1, alien2, alien3);
+  }
+
+  @Override
+  void generatePath(float curveWidth, float startPath, float finishPath) {
+    path.clear(); // Clear any previous path
+
+    // We'll place the path between these Y limits
+    float minY = startPath;
+    float maxY = height - finishPath;
+
+    // Number of full sine-wave curves from minY to maxY
+    int totalCurves = 1;
+
+    // The total vertical distance for the path
+    float pathLength = maxY - minY;
+
+    // We want exactly 'totalCurves' cycles over 'pathLength'
+    float frequency = totalCurves * TWO_PI / pathLength;
+
+    // Build the path in small increments
+    for (float y = minY; y < maxY; y += 2) {
+      // Shift y so that at y = minY, the sine begins at sin(0) = 0
+      float relativeY = y - minY;
+
+      // Center horizontally at width/2; sine wave amplitude = curveWidth
+      float x = width / 2 + sin(relativeY * frequency) * curveWidth;
+
+      path.add(new PVector(x, y));
+    }
+  }
+}
+
+
 
 class SineWaveLevel extends Level {
   SineWaveLevel(float thickness, float id, PImage alien1, PImage alien2, PImage alien3) {

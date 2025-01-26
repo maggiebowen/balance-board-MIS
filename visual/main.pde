@@ -245,15 +245,15 @@ void initializeGameScreen() {
   endTrail = height - finishPath;
 
   if (currentDifficulty == 1) {
-    level = new SineWaveLevel(60, 1, alien1, alien2, alien3);
+    level = new easyLevel(60, 1, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
   } else if (currentDifficulty == 2) {
-    level = new SineWaveLevel(60, 1, alien1, alien2, alien3);
+    level = new easyLevel(60, 1, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
   } else if (currentDifficulty == 3) {
-    level = new SineWaveLevel(60, 1, alien1, alien2, alien3);
+    level = new easyLevel(60, 1, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
     level.generateAliens();
