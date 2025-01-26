@@ -6,14 +6,21 @@ abstract class Level {
   ArrayList<PVector> alienPositions; // Store alien positions
   float alienRadius;       // Radius of aliens
   ArrayList<PVector> alienVelocities; // Store velocities of aliens
+  ArrayList<PImage> alienImages;    // Images for the aliens
 
-  Level(float thickness, float id) {
+  Level(float thickness, float id, PImage alien1, PImage alien2, PImage alien3) {
     this.thickness = thickness;
     this.id = id;
     this.alienRadius = thickness; // will be equal to the spaceship
     path = new ArrayList<PVector>();
     alienPositions = new ArrayList<PVector>();
     alienVelocities = new ArrayList<PVector>();
+    alienImages = new ArrayList<PImage>();
+    
+    // Add images for each alien
+    alienImages.add(alien1); // Alien 1 (left)
+    alienImages.add(alien3); // Alien 3 (left)
+    alienImages.add(alien2); // Alien 2 (right)
   }
 
   abstract void generatePath(float curveWidth, float startPath, float finishPath); // Abstract method
@@ -41,19 +48,23 @@ abstract class Level {
         PVector pos = alienPositions.get(i);
         PVector vel = alienVelocities.get(i);
 
-        // Update position based on horizontal velocity only
+        // Update position based on horizontal velocity
         pos.x += vel.x;
 
-        // Bounce off left and right walls
-        if (pos.x < alienRadius || pos.x > width - alienRadius) {
+        // Determine margin boundaries
+        float leftLimit = (pos.x < width / 2) ? alienRadius : 3 * width / 4;
+        float rightLimit = (pos.x < width / 2) ? width / 4 : width - alienRadius;
+
+        // Bounce off the margin boundaries
+        if (pos.x < leftLimit || pos.x > rightLimit) {
             vel.x *= -1;
         }
 
         // Randomly adjust horizontal velocity slightly to simulate erratic movement
         vel.x += random(-0.5f, 0.5f);
 
-        // Constrain position to screen bounds horizontally
-        pos.x = constrain(pos.x, alienRadius, width - alienRadius);
+        // Constrain position to the respective margin
+        pos.x = constrain(pos.x, leftLimit, rightLimit);
     }
 }
 
@@ -74,31 +85,29 @@ abstract class Level {
     return (float) pointsCovered / totalPoints * 100;
   }
 
-  void generateAliens(int numberOfAliens) {
-    alienPositions.clear(); // Clear any existing aliens
-    alienVelocities.clear(); // Clear any existing velocities
+  void generateAliens() {
+    alienPositions.clear();
+    alienVelocities.clear();
 
-    // Define heights for the aliens
-    float[] heights = {height / 4, height / 2, 3 * height / 4}; // Different heights for variety
+    // Define alien starting positions and velocities
+    float[][] alienData = {
+        {width / 4, height / 4, 1, 3},      // Left alien 1
+        {width / 4, 3 * height / 4, 1, 3}, // Left alien 2
+        {3 * width / 4, height / 2, -3, -1} // Right alien
+    };
 
-    // Add two aliens on the left
-    for (int i = 0; i < 2; i++) {
-        float x = width / 4; // Left side, closer to the center
-        float y = heights[i]; // Use predefined heights
+    for (float[] data : alienData) {
+        float x = data[0];
+        float y = data[1];
+        float vxMin = data[2];
+        float vxMax = data[3];
+
         alienPositions.add(new PVector(x, y));
-
-        float vx = random(1, 3); // Random horizontal velocity moving right
-        alienVelocities.add(new PVector(vx, 0)); // Only horizontal velocity
+        alienVelocities.add(new PVector(random(vxMin, vxMax), 0)); // Only horizontal velocity
     }
+}
 
-    // Add one alien on the right
-    float x = 3 * width / 4; // Right side, closer to the center
-    float y = heights[2]; // Use the third height
-    alienPositions.add(new PVector(x, y));
 
-    float vx = random(-3, -1); // Random horizontal velocity moving left
-    alienVelocities.add(new PVector(vx, 0)); // Only horizontal velocity
-  }
 
 }
 

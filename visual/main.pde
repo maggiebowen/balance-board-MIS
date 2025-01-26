@@ -247,7 +247,7 @@ void initializeGameScreen() {
     level = new SineWaveLevel(60, 1);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
-    level.generateAliens(3);
+    level.generateAliens();
   } else {
     noLoop();
   }
@@ -256,7 +256,7 @@ void initializeGameScreen() {
 }
 
 void initializeSecondLevelGameScreen() {
-  bg = loadImage("images/space-background-extended.png");
+  bg = loadImage("images/space-background-resize.png");
   endTrail = height - finishPath;
 
   if (currentDifficulty == 1) {
@@ -271,7 +271,7 @@ void initializeSecondLevelGameScreen() {
     level = new ZigzagLevel(60, 2);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
-    level.generateAliens(3);
+    level.generateAliens();
   } else {
     noLoop();
   }
