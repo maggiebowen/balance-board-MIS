@@ -232,7 +232,7 @@ void gameOverScreen() {
 
 // Initialization logic for the game screen
 void initializeGameScreen() {
-  bg = loadImage("images/space-background-extended.png");
+  bg = loadImage("images/space-background-resize.png.png");
   endTrail = height - finishPath;
 
   if (currentDifficulty == 1) {
