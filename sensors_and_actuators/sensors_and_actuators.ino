@@ -20,7 +20,8 @@
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 #include <EEPROM.h>
-#include <IIRFilter.h>
+// randomly i have to comment out on mac
+// #include <IIRFilter.h>
 
 
 #define BAUD_RATE 115200 //NOTE: on the Teensy this is meaningless as the Teensy always transmits data at the full USB speed
