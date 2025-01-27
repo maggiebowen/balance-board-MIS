@@ -21,7 +21,7 @@
 #include <utility/imumaths.h>
 #include <EEPROM.h>
 // randomly i have to comment out on mac
-// #include <IIRFilter.h>
+#include <IIRFilter.h>
 
 
 #define BAUD_RATE 115200 //NOTE: on the Teensy this is meaningless as the Teensy always transmits data at the full USB speed
@@ -68,7 +68,7 @@ int left_motor_intensity = 0;
 void setup() {
   Serial.begin(BAUD_RATE);
   while(!Serial);
-  // analogReadResolution(ANALOG_BIT_RESOLUTION); // Only for Teensy
+  analogReadResolution(ANALOG_BIT_RESOLUTION); // Only for Teensy
 
 
   /* Setup of the IMU BNO055 sensor ******************************************************************************/

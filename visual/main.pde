@@ -43,8 +43,9 @@ void setup() {
   
   // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
   // mac: /dev/cu.usbmodem1101
-  //arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
-  arduinoPort = new Serial(this, "/dev/cu.usbmodem1101", 115200); //change the port name depending on Mac or Windows
+  // arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
+  // arduinoPort = new Serial(this, "/dev/cu.usbmodem1101", 115200); //change the port name depending on Mac or Windows
+  arduinoPort = new Serial(this, "COM4", 115200); //change the port name depending on Mac or Windows
   
   date = nf(day(), 2) + "-" + nf(month(), 2); // Format: "day-month"
   time = nf(hour(), 2) + "-" + nf(minute(), 2) + "-" + nf(second(), 2); // Format: "hour:minute:seconds"
@@ -95,8 +96,6 @@ void gameScreen() {
     level.updateAliens();
   }
   level.draw(); // draw the trajectory
-  
-  showInfo(); // show info of level
   
   ball.move(); // move and draw ball
   ball.draw();
@@ -160,8 +159,6 @@ void gameScreenSecondLevel() {
     level.updateAliens();
   }
   level.draw(); // draw the trajectory
-  
-  showInfo(); // show info of level
   
   ball.move(); // move and draw ball
   ball.draw();
@@ -286,16 +283,6 @@ void initializeSecondLevelGameScreen() {
   }
 
   applyFeedbacks(); // Initialize feedback mechanisms
-}
-
-
-// show Level X (depending on the level)
-void showInfo(){
-  
-  fill(0);
-  textAlign(RIGHT,TOP);
-  textSize(50);
-  text("Level " + int(level.id), width - 50, 50);
 }
 
 void applyFeedbacks(){

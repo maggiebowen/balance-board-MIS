@@ -21,9 +21,11 @@ class Ball {
     this.radius = radius;
     
     if (difficulty == 1) {
-      this.velY = 1; 
+      // this.velY = 1; 
+      this.velY = 2;
     } else {
-      this.velY = 0.5 + (difficulty - 1) * 0.5;
+      // this.velY = 0.5 + (difficulty - 1) * 0.5;
+      this.velY = 3;
     }
                 
     this.velX = 0;             // initially, it is not falling
