@@ -19,9 +19,9 @@ class HapticFeedback {
       if (levelPositionX != -1){
         int deadZone = 30;
         
-        int leftMotorIntensity = int(map(ballPositionX,0,levelPositionX,250,50)); //If the ball moves away from the path to the left, the motor on the left vibrates
+        int leftMotorIntensity = int(map(ballPositionX,0,levelPositionX,350,50)); //If the ball moves away from the path to the left, the motor on the left vibrates
         leftMotorIntensity = Math.max(leftMotorIntensity, 0);//Avoid sending negative values to the vibration motor
-        int rightMotorIntensity = int(map(ballPositionX,levelPositionX,width,50,250)); //If the ball moves away from the path to the right, the motor on the right vibrates
+        int rightMotorIntensity = int(map(ballPositionX,levelPositionX,width,50,350)); //If the ball moves away from the path to the right, the motor on the right vibrates
         rightMotorIntensity = Math.max(rightMotorIntensity, 0);
         
         if (Math.abs(ballPositionX - levelPositionX) < deadZone) {

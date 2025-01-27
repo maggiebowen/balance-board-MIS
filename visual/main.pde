@@ -22,8 +22,8 @@ PImage alien3;
 HapticFeedback hapticFeedback; // haptic Feedback
 AuditoryFeedback auditoryFeedback; // auditory feedback
 
-boolean applyHFB = false; // variable to apply haptic feedback --> set to false if testing without
-boolean applyAFB = false; // variable to apply auditory feedback --> set to false if testing without
+boolean applyHFB = true; // variable to apply haptic feedback --> set to false if testing without
+boolean applyAFB = true; // variable to apply auditory feedback --> set to false if testing without
 
 int PDPort = 12000; // Port to communicate with PureData
 
