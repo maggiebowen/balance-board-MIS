@@ -75,12 +75,15 @@ abstract class Level {
   float calculateAccuracy(Level level, Ball ball) {
    
     int pointsCovered = 0;
-    int totalPoints = level.path.size();
+    int totalPoints = 0;
     
     for (PVector ballPoint : ball.trajectory) {
         float closestX = getXAtBallY(level, ballPoint.y);
         if (closestX != -1 && abs(closestX - ballPoint.x) <= ball.radius*2) { //distance less to the diameter
             pointsCovered++;
+        }
+        if (closestX != -1){
+          totalPoints++;
         }
     }
 
@@ -121,8 +124,8 @@ float calculateSimilarity(Level level, Ball ball) {
 
   float getXAtBallY(Level level, float y) {
       for (PVector position : level.path) {
-          if (abs(position.y - y) < 1.0) {
-              return position.x;
+          if (abs(position.y - y) == 0) {
+            return position.x;
           }
       }
       return -1; // Not found
