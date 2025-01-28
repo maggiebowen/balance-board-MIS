@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 // Superclass
 abstract class Level {
   ArrayList<PVector> path; // trajectory to be drawn
@@ -71,20 +73,61 @@ abstract class Level {
 
 
   float calculateAccuracy(Level level, Ball ball) {
+   
     int pointsCovered = 0;
     int totalPoints = level.path.size();
-
-    for (PVector p : level.path) {
-      for (PVector ballPoint : ball.trajectory) {
-        if (dist(p.x, p.y, ballPoint.x, ballPoint.y) <= ball.radius / 2) {
-          pointsCovered++;
-          break;
+    
+    for (PVector ballPoint : ball.trajectory) {
+        float closestX = getXAtBallY(level, ballPoint.y);
+        if (closestX != -1 && abs(closestX - ballPoint.x) <= ball.radius*2) { //distance less to the diameter
+            pointsCovered++;
         }
-      }
     }
 
     return (float) pointsCovered / totalPoints * 100;
   }
+  
+float calculateSimilarity(Level level, Ball ball) {
+    HashMap<Float, Float> ballXByY = new HashMap<>();
+    HashMap<Float, Float> levelXByY = new HashMap<>();
+
+    // 1. Map balls trayectory
+    for (PVector ballPoint : ball.trajectory) {
+        ballXByY.put(ballPoint.y, ballPoint.x);
+    }
+
+    // 2. Map levels trayectory
+    for (PVector levelPoint : level.path) {
+        levelXByY.put(levelPoint.y, levelPoint.x);
+    }
+
+    // 3.Compare X for each Y value
+    float totalDifference = 0;
+    int count = 0;
+
+    for (Float y : levelXByY.keySet()) {
+        if (ballXByY.containsKey(y)) {
+            float ballX = ballXByY.get(y);
+            float levelX = levelXByY.get(y);
+            totalDifference += abs(ballX - levelX);
+            count++;
+        }
+    }
+
+    // 4. Calculate similarity (closer to 0, more similar)
+    float maxDifference = width; 
+    return count > 0 ? max(0, 100 * (1 - (totalDifference / (count * maxDifference)))) : 0;
+  }
+
+  float getXAtBallY(Level level, float y) {
+      for (PVector position : level.path) {
+          if (abs(position.y - y) < 1.0) {
+              return position.x;
+          }
+      }
+      return -1; // Not found
+  }
+
 
   void generateAliens() {
     alienPositions.clear();

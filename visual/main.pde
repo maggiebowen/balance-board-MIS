@@ -22,8 +22,8 @@ PImage alien3;
 HapticFeedback hapticFeedback; // haptic Feedback
 AuditoryFeedback auditoryFeedback; // auditory feedback
 
-boolean applyHFB = true; // variable to apply haptic feedback --> set to false if testing without
-boolean applyAFB = true; // variable to apply auditory feedback --> set to false if testing without
+boolean applyHFB = false; // variable to apply haptic feedback --> set to false if testing without
+boolean applyAFB = false; // variable to apply auditory feedback --> set to false if testing without
 
 int PDPort = 12000; // Port to communicate with PureData
 
@@ -45,7 +45,7 @@ void setup() {
   // mac: /dev/cu.usbmodem1101
   // arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
   // arduinoPort = new Serial(this, "/dev/cu.usbmodem1101", 115200); //change the port name depending on Mac or Windows
-  arduinoPort = new Serial(this, "COM4", 115200); //change the port name depending on Mac or Windows
+  arduinoPort = new Serial(this, "COM3", 115200); //change the port name depending on Mac or Windows
   
   date = nf(day(), 2) + "-" + nf(month(), 2); // Format: "day-month"
   time = nf(hour(), 2) + "-" + nf(minute(), 2) + "-" + nf(second(), 2); // Format: "hour:minute:seconds"
@@ -124,7 +124,7 @@ void gameScreen() {
     
     // Calculate the accuracy of the player's trajectory    
     float accuracy = level.calculateAccuracy(level, ball);
-    
+    float similarity = level.calculateSimilarity(level, ball);
     // save it in a file
     String fileName = date + "---" + time + "-" + level.id + currentDifficulty+ ".txt"; // Format: "date---time.txt"
     
@@ -135,7 +135,8 @@ void gameScreen() {
     output.println("Difficulty type "+currentDifficulty + ": ");
     output.println("Auditory feedback: " + applyAFB);
     output.println("Haptic feedback: " + applyHFB);
-    output.println(accuracy+"\n");
+    output.println("Accuracy: " +accuracy);
+    output.println("Similarity: " +similarity);
     output.close();
     
     currentDifficulty++;
@@ -187,6 +188,7 @@ void gameScreenSecondLevel() {
     
     // Calculate the accuracy of the player's trajectory    
     float accuracy = level.calculateAccuracy(level, ball);
+    float similarity = level.calculateSimilarity(level, ball);
     // save it in a file
     String fileName = date + "---" + time + "-" + level.id + currentDifficulty+ ".txt"; // Format: "date---time.txt"
     
@@ -197,7 +199,8 @@ void gameScreenSecondLevel() {
     output.println("Difficulty type "+currentDifficulty + ": ");
     output.println("Auditory feedback: " + applyAFB);
     output.println("Haptic feedback: " + applyHFB);
-    output.println(accuracy+"\n");
+    output.println("Accuracy: " +accuracy);
+    output.println("Similarity: " +similarity);
     output.close();
     
     currentDifficulty++;
