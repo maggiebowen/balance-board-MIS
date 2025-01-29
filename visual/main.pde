@@ -84,7 +84,18 @@ void initScreen() {
   // Draw a semi-transparent rectangle for better text readability
   noStroke(); 
   fill(0, 0, 0, 200); // Black with 150 alpha (transparency)
-  rect(width / 2 - 250, height / 2 - 50, 500, 100); // Centered box with rounded corners
+  rect(width / 2 - 250, height / 2 - 50, 500, 100); 
+  
+  // Draw a semi-transparent rectangle for better text readability
+  noStroke(); 
+  fill(95, 107, 200, 150); // Black with 150 alpha (transparency)
+  rect(width / 2 - 350, height / 5, 700, 400); 
+
+  //draw title
+  textAlign(CENTER, CENTER); // Center horizontally and vertically
+  fill(255); // White text color
+  textSize(100); // Larger font size for visibility
+  text("EquiLuna", width / 2, height / 3); // Text centered
 
   // Draw the text
   textAlign(CENTER, CENTER); // Center horizontally and vertically
