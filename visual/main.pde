@@ -88,7 +88,7 @@ void initScreen() {
 
   // Draw the text
   textAlign(CENTER, CENTER); // Center horizontally and vertically
-  fill(255, 228, 2); // White text color
+  fill(255); // White text color
   textSize(40); // Larger font size for visibility
   text("Click to start", width / 2, height / 2); // Text centered
 }
@@ -300,7 +300,7 @@ void gameOverScreen() {
   background(initScreenBg);
   
   textAlign(CENTER, CENTER);
-  fill(255, 228, 2);
+  fill(255);
   textSize(40);
   text("Level Completed", width / 2, height / 2 - 200);
 
@@ -308,7 +308,7 @@ void gameOverScreen() {
   noStroke(); 
   fill(0, 0, 0, 200);
   rect(width / 2 - 200, height / 2 - 100, 400, 100); 
-  fill(255, 228, 2); // Text color
+  fill(255); // Text color
   textSize(20);
   text("Return to Main Menu", width / 2, height / 2 - 50);
 
@@ -317,7 +317,7 @@ void gameOverScreen() {
     noStroke(); 
     fill(0, 0, 0, 200);
     rect(width / 2 - 200, height / 2 + 40, 400, 100); // Button position and size
-    fill(255, 228, 2); // Text color
+    fill(255); // Text color
     textSize(20);
     text("Play Second Level", width / 2, height / 2 + 90);
   }
@@ -327,7 +327,7 @@ void gameOverScreen() {
     noStroke(); 
     fill(0, 0, 0, 200);
     rect(width / 2 - 200, height / 2 + 40, 400, 100); // Button position and size
-    fill(255, 228, 2); // Text color
+    fill(255); // Text color
     textSize(20);
     text("Play Third Level", width / 2, height / 2 + 90);
   }
