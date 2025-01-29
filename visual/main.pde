@@ -19,6 +19,10 @@ PImage initScreenBg;
 PImage alien1;
 PImage alien2;
 PImage alien3;
+
+//import to change to custom font
+PFont font;
+
 HapticFeedback hapticFeedback; // haptic Feedback
 AuditoryFeedback auditoryFeedback; // auditory feedback
 
@@ -35,6 +39,10 @@ float endTrail;           // were the trail of the level ends
 
 void setup() {
   size(1500,900);
+  
+  //make font fit pixel-art style
+  font = createFont("Silkscreen-Bold.ttf", 120);
+  textFont(font);
   
   // Load alien images
   alien1 = loadImage("images/alien1.png");
@@ -75,14 +83,14 @@ void initScreen() {
   
   // Draw a semi-transparent rectangle for better text readability
   noStroke(); 
-  fill(0, 0, 0, 150); // Black with 150 alpha (transparency)
-  rect(width / 2 - 250, height / 2 - 50, 500, 100, 20); // Centered box with rounded corners
+  fill(0, 0, 0, 200); // Black with 150 alpha (transparency)
+  rect(width / 2 - 250, height / 2 - 50, 500, 100); // Centered box with rounded corners
 
   // Draw the text
   textAlign(CENTER, CENTER); // Center horizontally and vertically
-  fill(255); // White text color
+  fill(255, 228, 2); // White text color
   textSize(40); // Larger font size for visibility
-  text("Click to start the adventure", width / 2, height / 2); // Text centered
+  text("Click to start", width / 2, height / 2); // Text centered
 }
 
 // EASY - First Level Screen 
@@ -292,24 +300,24 @@ void gameOverScreen() {
   background(initScreenBg);
   
   textAlign(CENTER, CENTER);
-  fill(255);
+  fill(255, 228, 2);
   textSize(40);
   text("Level Completed", width / 2, height / 2 - 200);
 
   // Button 1: Return to Initial Screen
   noStroke(); 
-  fill(0, 0, 0, 150);
-  rect(width / 2 - 200, height / 2 - 100, 400, 100); // Centered box with rounded corner
-  fill(255); // Text color
+  fill(0, 0, 0, 200);
+  rect(width / 2 - 200, height / 2 - 100, 400, 100); 
+  fill(255, 228, 2); // Text color
   textSize(20);
   text("Return to Main Menu", width / 2, height / 2 - 50);
 
   // Button 2: Go to Second Level
   if (currentLevel == 1){
     noStroke(); 
-    fill(0, 0, 0, 150);
+    fill(0, 0, 0, 200);
     rect(width / 2 - 200, height / 2 + 40, 400, 100); // Button position and size
-    fill(255); // Text color
+    fill(255, 228, 2); // Text color
     textSize(20);
     text("Play Second Level", width / 2, height / 2 + 90);
   }
@@ -317,9 +325,9 @@ void gameOverScreen() {
   // Button 3: Go to Third Level
   if (currentLevel == 2){
     noStroke(); 
-    fill(0, 0, 0, 150);
+    fill(0, 0, 0, 200);
     rect(width / 2 - 200, height / 2 + 40, 400, 100); // Button position and size
-    fill(255); // Text color
+    fill(255, 228, 2); // Text color
     textSize(20);
     text("Play Third Level", width / 2, height / 2 + 90);
   }
