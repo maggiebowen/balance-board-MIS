@@ -1,4 +1,4 @@
-int gameScreen = 0; // Firt screen: start game
+int gameScreen = 0; // First screen: start game
 boolean nextSublevel = true; // Start next sublevel
 int currentLevel = 0; // Level played
 
@@ -61,6 +61,8 @@ void draw() {
   } else if (gameScreen == 2) {
     gameScreenSecondLevel();   
   } else if (gameScreen == 3) {
+    gameScreenThirdLevel();   
+  } else if (gameScreen == 4) {
     gameOverScreen();   
   }
   
@@ -83,7 +85,7 @@ void initScreen() {
   text("Click to start the adventure", width / 2, height / 2); // Text centered
 }
 
-// Balance Board Game - Firt Level Screen
+// EASY - First Level Screen 
 void gameScreen() {
   if (nextSublevel) { // Only initialize when starting a new sublevel
     initializeGameScreen();
@@ -141,13 +143,16 @@ void gameScreen() {
     
     currentDifficulty++;
     nextSublevel = true;
+    //After finishing difficulty 3, go to screen 4 (transition)
     if (currentDifficulty==4){
-      gameScreen = 3;
+      gameScreen = 4;
+      currentLevel = 1; 
+      currentDifficulty = 1;
     }
   }
 }
 
-// Second Level Screen
+// MEDIUM - Second Level Screen
 void gameScreenSecondLevel() {
   if (nextSublevel) { // Only initialize when starting a new sublevel
     initializeSecondLevelGameScreen();
@@ -205,8 +210,79 @@ void gameScreenSecondLevel() {
     
     currentDifficulty++;
     nextSublevel = true;
+    
+    //After finishing difficulty 3, go to screen 4 (transition)
     if (currentDifficulty==4){
-      gameScreen = 3;
+      gameScreen = 4;
+      currentLevel = 2;    
+      currentDifficulty = 1; 
+    }
+  }
+}
+
+// HARD - Third Level Screen
+void gameScreenThirdLevel() {
+  if (nextSublevel) { // Only initialize when starting a new sublevel
+    initializeThirdLevelGameScreen();
+    nextSublevel = false;
+  }
+
+  background(bg); // background image
+
+  if (currentDifficulty == 3){
+    level.updateAliens();
+  }
+  level.draw(); // draw the trajectory
+  
+  ball.move(); // move and draw ball
+  ball.draw();
+  
+  
+  if (applyHFB) { // if providing user with haptic feedback
+    if (ball.position.y <= endTrail){ // if ball is within the trail's y axis
+      hapticFeedback.sendFeedback(endTrail);  
+    } 
+    else {
+       hapticFeedback.stopFeedback();  
+    }
+  }
+  
+  if (applyAFB) { // if providing user with auditory feedback
+    if ( ball.position.y <= endTrail){ // if ball is within the trail's y axis
+      auditoryFeedback.sendFeedback(endTrail);  
+    } 
+    else {
+       auditoryFeedback.stopFeedback();  
+    }
+  } 
+  
+  // Check if the level is complete (when the ball falls off the screen)
+  if (ball.position.y > height) {
+    
+    // Calculate the accuracy of the player's trajectory    
+    float accuracy = level.calculateAccuracy(level, ball);
+    float similarity = level.calculateSimilarity(level, ball);
+    // save it in a file
+    String fileName = date + "---" + time + "-" + level.id + currentDifficulty+ ".txt"; // Format: "date---time.txt"
+    
+    filePath = "../results/"+fileName;
+    // write the accuracy results
+    output = createWriter(filePath); // open the file
+    output.println("Level: " + level.id);
+    output.println("Difficulty type "+currentDifficulty + ": ");
+    output.println("Auditory feedback: " + applyAFB);
+    output.println("Haptic feedback: " + applyHFB);
+    output.println("Accuracy: " +accuracy);
+    output.println("Similarity: " +similarity);
+    output.close();
+    
+    currentDifficulty++;
+    nextSublevel = true;
+    
+    if (currentDifficulty==4){
+      gameScreen = 4;     
+      currentLevel = 3;    
+      currentDifficulty = 1; 
     }
   }
 }
@@ -236,6 +312,16 @@ void gameOverScreen() {
     fill(255); // Text color
     textSize(20);
     text("Play Second Level", width / 2, height / 2 + 90);
+  }
+  
+  // Button 3: Go to Third Level
+  if (currentLevel == 2){
+    noStroke(); 
+    fill(0, 0, 0, 150);
+    rect(width / 2 - 200, height / 2 + 40, 400, 100); // Button position and size
+    fill(255); // Text color
+    textSize(20);
+    text("Play Third Level", width / 2, height / 2 + 90);
   }
 }
 
@@ -269,15 +355,39 @@ void initializeSecondLevelGameScreen() {
   endTrail = height - finishPath;
 
   if (currentDifficulty == 1) {
-    level = new hardLevel(60, 2, alien1, alien2, alien3);
+    level = new mediumLevel(60, 2, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
   } else if (currentDifficulty == 2) {
-    level = new hardLevel(60, 2, alien1, alien2, alien3);
+    level = new mediumLevel(60, 2, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
   } else if (currentDifficulty == 3) {
-    level = new hardLevel(60, 2, alien1, alien2, alien3);
+    level = new mediumLevel(60, 2, alien1, alien2, alien3);
+    level.generatePath(100, startPath, finishPath);
+    ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
+    level.generateAliens();
+  } else {
+    noLoop();
+  }
+
+  applyFeedbacks(); // Initialize feedback mechanisms
+}
+
+void initializeThirdLevelGameScreen() {
+  bg = loadImage("images/space-background-resize.png");
+  endTrail = height - finishPath;
+
+  if (currentDifficulty == 1) {
+    level = new hardLevel(60, 3, alien1, alien2, alien3);
+    level.generatePath(100, startPath, finishPath);
+    ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
+  } else if (currentDifficulty == 2) {
+    level = new hardLevel(60, 3, alien1, alien2, alien3);
+    level.generatePath(100, startPath, finishPath);
+    ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
+  } else if (currentDifficulty == 3) {
+    level = new hardLevel(60, 3, alien1, alien2, alien3);
     level.generatePath(100, startPath, finishPath);
     ball = new Ball(this, arduinoPort, width / 2, radius, radius, currentDifficulty);
     level.generateAliens();
@@ -303,18 +413,23 @@ public void mousePressed() {
   // if we are on the initial screen when clicked, start the game
   if (gameScreen==0) {
     startGame();
-  } else if (gameScreen==3) {
+  } 
+  else if (gameScreen==4) { 
     // Button 1: Check if click is within "Return to Main Menu" button
     if (mouseX > width / 2 - 200 && mouseX < width / 2 + 200 &&
         mouseY > height / 2 - 100 && mouseY < height / 2 ) {
       goHome(); // Go to initial screen
     }
-
-    // Button 2: Check if click is within "Play Second Level" button
-    if (currentLevel == 1){
+    else if (currentLevel == 1){
       if (mouseX > width / 2 - 200 && mouseX < width / 2 + 200 &&
           mouseY > height / 2 + 40 && mouseY < height / 2 + 140) {
-        startSecondLevel(); // Assume 3 corresponds to gameScreenSecondLevel
+        startSecondLevel(); 
+      }
+    }
+    else if (currentLevel == 2){
+      if (mouseX > width / 2 - 200 && mouseX < width / 2 + 200 &&
+          mouseY > height / 2 + 40 && mouseY < height / 2 + 140) {
+        startThirdLevel(); 
       }
     }
   }
@@ -336,6 +451,12 @@ void goHome() {
 void startSecondLevel() {
   gameScreen=2;
   currentLevel = 2;
+  nextSublevel = true;
+  currentDifficulty = 1;
+}
+void startThirdLevel() {
+  gameScreen=3;
+  currentLevel = 3;
   nextSublevel = true;
   currentDifficulty = 1;
 }

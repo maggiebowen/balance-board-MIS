@@ -271,8 +271,6 @@ class mediumLevel extends Level {
   }
 }
 
-
-// Hard Level with Reduced Width
 class hardLevel extends Level {
   
   // Constructor
