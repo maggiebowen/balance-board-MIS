@@ -31,7 +31,7 @@ class AuditoryFeedback {
       
       if (levelPositionX != -1){
         
-        float distance = abs(levelPositionX - ballPositionX);
+        float distance = levelPositionX - ballPositionX;
         OscMessage msg = new OscMessage("/distance");
         msg.add(distance);
         oscP5.send(msg, pureData);
