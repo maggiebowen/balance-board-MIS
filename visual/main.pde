@@ -44,8 +44,8 @@ void setup() {
   // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
   // mac: /dev/cu.usbmodem1101
   // arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
-  // arduinoPort = new Serial(this, "/dev/cu.usbmodem1101", 115200); //change the port name depending on Mac or Windows
-  arduinoPort = new Serial(this, "COM3", 115200); //change the port name depending on Mac or Windows
+  arduinoPort = new Serial(this, "/dev/cu.usbmodem1101", 115200); //change the port name depending on Mac or Windows
+  //arduinoPort = new Serial(this, "COM3", 115200); //change the port name depending on Mac or Windows
   
   date = nf(day(), 2) + "-" + nf(month(), 2); // Format: "day-month"
   time = nf(hour(), 2) + "-" + nf(minute(), 2) + "-" + nf(second(), 2); // Format: "hour:minute:seconds"
