@@ -70,7 +70,7 @@ void draw() {
 
 // Start Game Screen
 void initScreen() {
-  initScreenBg = loadImage("images/start-game-background.png");
+  initScreenBg = loadImage("images/start-screen-background.png");
   background(initScreenBg);
   
   // Draw a semi-transparent rectangle for better text readability
