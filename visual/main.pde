@@ -199,12 +199,7 @@ void gameScreen() {
     filePath = "../results/"+fileName;
     // write the accuracy results
     output = createWriter(filePath); // open the file
-    output.println("Level: " + level.id);
-    output.println("Difficulty type "+currentDifficulty + ": ");
-    output.println("Auditory feedback: " + applyAFB);
-    output.println("Haptic feedback: " + applyHFB);
-    output.println("Accuracy: " +accuracy);
-    output.println("Similarity: " +similarity);
+    output.println(applyHFB+","+applyAFB+","+level.id+","+currentDifficulty+","+accuracy+","+similarity);
     output.close();
     
     currentDifficulty++;
@@ -266,12 +261,7 @@ void gameScreenSecondLevel() {
     filePath = "../results/"+fileName;
     // write the accuracy results
     output = createWriter(filePath); // open the file
-    output.println("Level: " + level.id);
-    output.println("Difficulty type "+currentDifficulty + ": ");
-    output.println("Auditory feedback: " + applyAFB);
-    output.println("Haptic feedback: " + applyHFB);
-    output.println("Accuracy: " +accuracy);
-    output.println("Similarity: " +similarity);
+    output.println(applyHFB+","+applyAFB+","+level.id+","+currentDifficulty+","+accuracy+","+similarity);
     output.close();
     
     currentDifficulty++;
@@ -334,12 +324,7 @@ void gameScreenThirdLevel() {
     filePath = "../results/"+fileName;
     // write the accuracy results
     output = createWriter(filePath); // open the file
-    output.println("Level: " + level.id);
-    output.println("Difficulty type "+currentDifficulty + ": ");
-    output.println("Auditory feedback: " + applyAFB);
-    output.println("Haptic feedback: " + applyHFB);
-    output.println("Accuracy: " +accuracy);
-    output.println("Similarity: " +similarity);
+    output.println(applyHFB+","+applyAFB+","+level.id+","+currentDifficulty+","+accuracy+","+similarity);
     output.close();
     
     currentDifficulty++;
