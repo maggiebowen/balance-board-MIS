@@ -52,8 +52,8 @@ void setup() {
   // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
   // mac: /dev/cu.usbmodem1101
   // arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
-  arduinoPort = new Serial(this, "/dev/cu.usbmodem1101", 115200); //change the port name depending on Mac or Windows
-  //arduinoPort = new Serial(this, "COM3", 115200); //change the port name depending on Mac or Windows
+  // arduinoPort = new Serial(this, "/dev/cu.usbmodem1101", 115200); //change the port name depending on Mac or Windows
+  arduinoPort = new Serial(this, "COM3", 115200); //change the port name depending on Mac or Windows
   
   date = nf(day(), 2) + "-" + nf(month(), 2); // Format: "day-month"
   time = nf(hour(), 2) + "-" + nf(minute(), 2) + "-" + nf(second(), 2); // Format: "hour:minute:seconds"
@@ -139,22 +139,6 @@ void tutorialScreen() {
   // Check if the level is complete (when the ball falls off the screen)
   if (ball.position.y > height) {
     
-    // Calculate the accuracy of the player's trajectory    
-    float accuracy = level.calculateAccuracy(level, ball);
-    float similarity = level.calculateSimilarity(level, ball);
-    // save it in a file
-    String fileName = date + "---" + time + "-" + level.id + currentDifficulty+ ".txt"; // Format: "date---time.txt"
-    
-    filePath = "../results/"+fileName;
-    // write the accuracy results
-    output = createWriter(filePath); // open the file
-    output.println("Level: " + level.id);
-    output.println("Difficulty type "+currentDifficulty + ": ");
-    output.println("Auditory feedback: " + applyAFB);
-    output.println("Haptic feedback: " + applyHFB);
-    output.println("Accuracy: " +accuracy);
-    output.println("Similarity: " +similarity);
-    output.close();
     
     currentDifficulty++;
     nextSublevel = true;

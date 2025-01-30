@@ -1,0 +1,6 @@
+Level: 2.0
+Difficulty type 1: 
+Auditory feedback: false
+Haptic feedback: false
+Accuracy: 95.0
+Similarity: 98.48193

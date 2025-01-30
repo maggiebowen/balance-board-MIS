@@ -79,7 +79,7 @@ abstract class Level {
     
     for (PVector ballPoint : ball.trajectory) {
         float closestX = getXAtBallY(level, ballPoint.y);
-        if (closestX != -1 && abs(closestX - ballPoint.x) <= ball.radius*2) { //distance less to the diameter
+        if (closestX != -1 && abs(closestX - ballPoint.x) <= ball.radius+(ball.radius/3)) { //distance less to the diameter
             pointsCovered++;
         }
         if (closestX != -1){
