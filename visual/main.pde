@@ -63,45 +63,108 @@ void setup() {
 
 void draw() {
   if (gameScreen == 0) {
-    initScreen();
+    initScreen();             // "Click to Start" (Main Menu)
   } else if (gameScreen == 1) {
-    gameScreen();   
+    tutorialScreen();         // <-- New tutorial screen
   } else if (gameScreen == 2) {
-    gameScreenSecondLevel();   
+    gameScreen();             // easy level
   } else if (gameScreen == 3) {
-    gameScreenThirdLevel();   
+    gameScreenSecondLevel();  // medium level
   } else if (gameScreen == 4) {
-    gameOverScreen();   
+    gameScreenThirdLevel();   // hard level
+  } else if (gameScreen == 5) {
+    gameOverScreen();         // game over
   }
-  
 }
 
 // Start Game Screen
 void initScreen() {
   initScreenBg = loadImage("images/start-screen-background.png");
   background(initScreenBg);
-  
-  // Draw a semi-transparent rectangle for better text readability
-  noStroke(); 
-  fill(0, 0, 0, 200); // Black with 150 alpha (transparency)
-  rect(width / 2 - 250, height / 2 - 50, 500, 100); 
-  
-  // Draw a semi-transparent rectangle for better text readability
-  noStroke(); 
-  fill(95, 107, 200, 150); // Black with 150 alpha (transparency)
-  rect(width / 2 - 350, height / 5, 700, 400); 
 
   //draw title
   textAlign(CENTER, CENTER); // Center horizontally and vertically
   fill(255); // White text color
   textSize(100); // Larger font size for visibility
-  text("EquiLuna", width / 2, height / 3); // Text centered
+  text("EquiLuna", width / 2, height / 2 + 25); // Text centered
 
   // Draw the text
   textAlign(CENTER, CENTER); // Center horizontally and vertically
   fill(255); // White text color
   textSize(40); // Larger font size for visibility
-  text("Click to start", width / 2, height / 2); // Text centered
+  text("Click to start", width / 2, height / 2 + 125); // Text centered
+}
+
+//  Tutorial Level
+void tutorialScreen() {
+  //fill(255);
+  //textAlign(CENTER, CENTER);
+  //textSize(40);
+  //text("TUTORIAL: Practice controlling the astronaut", width/2, height/2);
+  
+  if (nextSublevel) { // Only initialize when starting a new sublevel
+    initializeTutorialScreen();
+    nextSublevel = false;
+  }
+  
+  background(bg); // background image
+  
+  if (currentDifficulty == 3){
+    level.updateAliens();
+  }
+  level.draw(); // draw the trajectory
+  
+  ball.move(); // move and draw ball
+  ball.draw();
+  
+  
+  if (applyHFB) { // if providing user with haptic feedback
+    if (ball.position.y <= endTrail){ // if ball is within the trail's y axis
+      hapticFeedback.sendFeedback(endTrail);  
+    } 
+    else {
+       hapticFeedback.stopFeedback();  
+    }
+  }
+  
+  if (applyAFB) { // if providing user with auditory feedback
+    if ( ball.position.y <= endTrail){ // if ball is within the trail's y axis
+      auditoryFeedback.sendFeedback(endTrail);  
+    } 
+    else {
+       auditoryFeedback.stopFeedback();  
+    }
+  } 
+  
+  // Check if the level is complete (when the ball falls off the screen)
+  if (ball.position.y > height) {
+    
+    // Calculate the accuracy of the player's trajectory    
+    float accuracy = level.calculateAccuracy(level, ball);
+    float similarity = level.calculateSimilarity(level, ball);
+    // save it in a file
+    String fileName = date + "---" + time + "-" + level.id + currentDifficulty+ ".txt"; // Format: "date---time.txt"
+    
+    filePath = "../results/"+fileName;
+    // write the accuracy results
+    output = createWriter(filePath); // open the file
+    output.println("Level: " + level.id);
+    output.println("Difficulty type "+currentDifficulty + ": ");
+    output.println("Auditory feedback: " + applyAFB);
+    output.println("Haptic feedback: " + applyHFB);
+    output.println("Accuracy: " +accuracy);
+    output.println("Similarity: " +similarity);
+    output.close();
+    
+    currentDifficulty++;
+    nextSublevel = true;
+    //After finishing difficulty 3, go to screen 4 (transition)
+    if (currentDifficulty==4){
+      gameScreen = 5;
+      currentLevel = 0; 
+      currentDifficulty = 1;
+    }
+  }
 }
 
 // EASY - First Level Screen 
@@ -164,7 +227,7 @@ void gameScreen() {
     nextSublevel = true;
     //After finishing difficulty 3, go to screen 4 (transition)
     if (currentDifficulty==4){
-      gameScreen = 4;
+      gameScreen = 5;
       currentLevel = 1; 
       currentDifficulty = 1;
     }
@@ -232,7 +295,7 @@ void gameScreenSecondLevel() {
     
     //After finishing difficulty 3, go to screen 4 (transition)
     if (currentDifficulty==4){
-      gameScreen = 4;
+      gameScreen = 5;
       currentLevel = 2;    
       currentDifficulty = 1; 
     }
@@ -299,9 +362,9 @@ void gameScreenThirdLevel() {
     nextSublevel = true;
     
     if (currentDifficulty==4){
-      gameScreen = 4;     
-      currentLevel = 3;    
-      currentDifficulty = 1; 
+      gameScreen = 5;
+      currentLevel = 3;
+      currentDifficulty = 1;
     }
   }
 }
@@ -323,6 +386,16 @@ void gameOverScreen() {
   textSize(20);
   text("Return to Main Menu", width / 2, height / 2 - 50);
 
+  // Button 2: Go to First Level
+  if (currentLevel == 0){
+    noStroke(); 
+    fill(0, 0, 0, 200);
+    rect(width / 2 - 200, height / 2 + 40, 400, 100); // Button position and size
+    fill(255); // Text color
+    textSize(20);
+    text("Play First Level", width / 2, height / 2 + 90);
+  }
+
   // Button 2: Go to Second Level
   if (currentLevel == 1){
     noStroke(); 
@@ -342,6 +415,31 @@ void gameOverScreen() {
     textSize(20);
     text("Play Third Level", width / 2, height / 2 + 90);
   }
+}
+
+// Initialization logic for tutorial
+void initializeTutorialScreen() {
+  bg = loadImage("images/start-screen-background.png");
+  endTrail = height - finishPath;
+
+  if (currentDifficulty == 1) {
+    level = new tutorialLevel(60, 1, alien1, alien2, alien3);
+    level.generatePath(100, startPath, finishPath);
+    ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
+  } else if (currentDifficulty == 2) {
+    level = new tutorialLevel(60, 1, alien1, alien2, alien3);
+    level.generatePath(100, startPath, finishPath);
+    ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
+  } else if (currentDifficulty == 3) {
+    level = new tutorialLevel(60, 1, alien1, alien2, alien3);
+    level.generatePath(100, startPath, finishPath);
+    ball = new Ball(this, arduinoPort, width / 2, height / 15, radius, currentDifficulty);
+    level.generateAliens();
+  } else {
+    noLoop();
+  }
+
+  applyFeedbacks(); // Initialize feedback mechanisms
 }
 
 // Initialization logic for the game screen
@@ -429,52 +527,74 @@ void applyFeedbacks(){
 /********* INPUTS *********/
 
 public void mousePressed() {
-  // if we are on the initial screen when clicked, start the game
-  if (gameScreen==0) {
-    startGame();
-  } 
-  else if (gameScreen==4) { 
-    // Button 1: Check if click is within "Return to Main Menu" button
+  // If we're on the initial screen when clicked:
+  if (gameScreen == 0) {
+    startTutorial(); // Go to tutorial
+  }
+  // If we're on the "transition / game over" screen:
+  else if (gameScreen == 5) {
+    // Check if click is within "Return to Main Menu" button
     if (mouseX > width / 2 - 200 && mouseX < width / 2 + 200 &&
-        mouseY > height / 2 - 100 && mouseY < height / 2 ) {
-      goHome(); // Go to initial screen
+        mouseY > height / 2 - 100 && mouseY < height / 2) {
+      goHome(); // go to main menu
     }
-    else if (currentLevel == 1){
+    else if (currentLevel == 0) {
+      // That means we just finished the tutorial, so button => go to first (easy) level
+      if (mouseX > width / 2 - 200 && mouseX < width / 2 + 200 &&
+          mouseY > height / 2 + 40 && mouseY < height / 2 + 140) {
+        startGame();  // This sets gameScreen=2 (easy)
+      }
+    }
+    else if (currentLevel == 1) {
+      // Just finished easy => start second (medium)
       if (mouseX > width / 2 - 200 && mouseX < width / 2 + 200 &&
           mouseY > height / 2 + 40 && mouseY < height / 2 + 140) {
         startSecondLevel(); 
       }
     }
-    else if (currentLevel == 2){
+    else if (currentLevel == 2) {
+      // Just finished medium => start third (hard)
       if (mouseX > width / 2 - 200 && mouseX < width / 2 + 200 &&
           mouseY > height / 2 + 40 && mouseY < height / 2 + 140) {
         startThirdLevel(); 
       }
     }
+    
+    //If we want more levels later on?
+    //else if (currentLevel == 3) {
+    //  next level
+    //}
   }
 }
 
 
+
 /********* OTHER FUNCTIONS *********/
 
-// This method sets the necessary variables to start the game  
+// This method sets the necessary variables to start the game 
+void goHome() {
+  gameScreen=0;
+}
+void startTutorial() {
+  gameScreen = 1;  // tutorial
+  currentLevel = 0;  // or however you want to track this
+  nextSublevel = true;
+  currentDifficulty = 1;
+}
 void startGame() {
-  gameScreen=1;    // increase the screen
+  gameScreen = 2;    // increase the screen
   currentLevel = 1;  // set the currentLevel as 1
   nextSublevel = true;  
   currentDifficulty = 1;
 }
-void goHome() {
-  gameScreen=0;
-}
 void startSecondLevel() {
-  gameScreen=2;
+  gameScreen=3;
   currentLevel = 2;
   nextSublevel = true;
   currentDifficulty = 1;
 }
 void startThirdLevel() {
-  gameScreen=3;
+  gameScreen=4;
   currentLevel = 3;
   nextSublevel = true;
   currentDifficulty = 1;
