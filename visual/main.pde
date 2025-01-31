@@ -53,7 +53,7 @@ void setup() {
   // mac: /dev/cu.usbmodem1101
   // arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
   // arduinoPort = new Serial(this, "/dev/cu.usbmodem1101", 115200); //change the port name depending on Mac or Windows
-  arduinoPort = new Serial(this, "COM5", 115200); //change the port name depending on Mac or Windows
+  arduinoPort = new Serial(this, "COM3", 115200); //change the port name depending on Mac or Windows
   
   date = nf(day(), 2) + "-" + nf(month(), 2); // Format: "day-month"
   time = nf(hour(), 2) + "-" + nf(minute(), 2) + "-" + nf(second(), 2); // Format: "hour:minute:seconds"
@@ -132,7 +132,6 @@ void tutorialScreen() {
       auditoryFeedback.startFeedback();
     }
     if ( ball.position.y <= endTrail && ball.position.y >= startPath){ // if ball is within the trail's y axis
-      println("SUP");
       auditoryFeedback.sendFeedback(endTrail);  
     } 
     else {
@@ -200,13 +199,14 @@ void gameScreen() {
     // Calculate the accuracy of the player's trajectory    
     float accuracy = level.calculateAccuracy(level, ball);
     float similarity = level.calculateSimilarity(level, ball);
+    float consistency = level.calculateConsistency(level, ball);
     // save it in a file
     String fileName = date + "---" + time + "-" + level.id + currentDifficulty+ ".txt"; // Format: "date---time.txt"
     
     filePath = "../results/"+fileName;
     // write the accuracy results
     output = createWriter(filePath); // open the file
-    output.println(applyHFB+","+applyAFB+","+level.id+","+currentDifficulty+","+accuracy+","+similarity);
+    output.println(applyHFB+","+applyAFB+","+level.id+","+currentDifficulty+","+accuracy+","+similarity+","+consistency);
     output.close();
     
     currentDifficulty++;
@@ -265,13 +265,14 @@ void gameScreenSecondLevel() {
     // Calculate the accuracy of the player's trajectory    
     float accuracy = level.calculateAccuracy(level, ball);
     float similarity = level.calculateSimilarity(level, ball);
+    float consistency = level.calculateConsistency(level, ball);
     // save it in a file
     String fileName = date + "---" + time + "-" + level.id + currentDifficulty+ ".txt"; // Format: "date---time.txt"
     
     filePath = "../results/"+fileName;
     // write the accuracy results
     output = createWriter(filePath); // open the file
-    output.println(applyHFB+","+applyAFB+","+level.id+","+currentDifficulty+","+accuracy+","+similarity);
+    output.println(applyHFB+","+applyAFB+","+level.id+","+currentDifficulty+","+accuracy+","+similarity+","+consistency);
     output.close();
     
     currentDifficulty++;
@@ -331,13 +332,14 @@ void gameScreenThirdLevel() {
     // Calculate the accuracy of the player's trajectory    
     float accuracy = level.calculateAccuracy(level, ball);
     float similarity = level.calculateSimilarity(level, ball);
+    float consistency = level.calculateConsistency(level, ball);
     // save it in a file
     String fileName = date + "---" + time + "-" + level.id + currentDifficulty+ ".txt"; // Format: "date---time.txt"
     
     filePath = "../results/"+fileName;
     // write the accuracy results
     output = createWriter(filePath); // open the file
-    output.println(applyHFB+","+applyAFB+","+level.id+","+currentDifficulty+","+accuracy+","+similarity);
+    output.println(applyHFB+","+applyAFB+","+level.id+","+currentDifficulty+","+accuracy+","+similarity+","+consistency);
     output.close();
     
     currentDifficulty++;

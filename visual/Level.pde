@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+
 
 // Superclass
 abstract class Level {
@@ -90,7 +92,7 @@ abstract class Level {
     return (float) pointsCovered / totalPoints * 100;
   }
   
-float calculateSimilarity(Level level, Ball ball) {
+  float calculateSimilarity(Level level, Ball ball) {
     HashMap<Float, Float> ballXByY = new HashMap<>();
     HashMap<Float, Float> levelXByY = new HashMap<>();
 
@@ -121,6 +123,52 @@ float calculateSimilarity(Level level, Ball ball) {
     float maxDifference = width; 
     return count > 0 ? max(0, 100 * (1 - (totalDifference / (count * maxDifference)))) : 0;
   }
+  
+  float calculateConsistency(Level level, Ball ball) {
+    HashMap<Float, Float> ballXByY = new HashMap<>();
+    HashMap<Float, Float> levelXByY = new HashMap<>();
+    ArrayList<Float> differences = new ArrayList<>();
+    
+    // Map balls trayectory
+    for (PVector ballPoint : ball.trajectory) {
+        ballXByY.put(ballPoint.y, ballPoint.x);
+    }
+    
+    // Map levels trayectory
+    for (PVector levelPoint : level.path) {
+        levelXByY.put(levelPoint.y, levelPoint.x);
+    }
+    
+    // Calculate differences
+    for (Float y : levelXByY.keySet()) {
+        if (ballXByY.containsKey(y)) {
+            float ballX = ballXByY.get(y);
+            float levelX = levelXByY.get(y);
+            differences.add(ballX - levelX);
+        }
+    }
+    
+    // calculate variabce
+    float mean = 0;
+    for (float d : differences) mean += d;
+    mean /= differences.size();
+    
+    float variance = 0;
+    for (float d : differences) variance += (d - mean) * (d - mean);
+    variance /= differences.size();
+    
+    // using IQR too 
+    Collections.sort(differences);
+    int q1Index = differences.size() / 4;
+    int q3Index = 3 * differences.size() / 4;
+    float iqr = differences.get(q3Index) - differences.get(q1Index);
+    
+    // normalize value
+    float maxVariance = width * width; // escalate
+    float maxIQR = width / 2;
+    return max(0, 100 * (1 - (iqr / maxIQR)));
+}
+
 
   float getXAtBallY(Level level, float y) {
       for (PVector position : level.path) {
