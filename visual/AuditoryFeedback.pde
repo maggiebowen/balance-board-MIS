@@ -20,7 +20,7 @@ class AuditoryFeedback {
     oscP5 = new OscP5(this, 8000); 
     pureData = new NetAddress("127.0.0.1", this.port); 
     
-    this.startFeedback();
+    // this.startFeedback();
   }
   
   void sendFeedback(float endTrail) {

@@ -53,7 +53,7 @@ void setup() {
   // mac: /dev/cu.usbmodem1101
   // arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
   // arduinoPort = new Serial(this, "/dev/cu.usbmodem1101", 115200); //change the port name depending on Mac or Windows
-  arduinoPort = new Serial(this, "COM3", 115200); //change the port name depending on Mac or Windows
+  arduinoPort = new Serial(this, "COM5", 115200); //change the port name depending on Mac or Windows
   
   date = nf(day(), 2) + "-" + nf(month(), 2); // Format: "day-month"
   time = nf(hour(), 2) + "-" + nf(minute(), 2) + "-" + nf(second(), 2); // Format: "hour:minute:seconds"
@@ -128,7 +128,11 @@ void tutorialScreen() {
   }
   
   if (applyAFB) { // if providing user with auditory feedback
-    if ( ball.position.y <= endTrail){ // if ball is within the trail's y axis
+    if (ball.position.y == startPath){
+      auditoryFeedback.startFeedback();
+    }
+    if ( ball.position.y <= endTrail && ball.position.y >= startPath){ // if ball is within the trail's y axis
+      println("SUP");
       auditoryFeedback.sendFeedback(endTrail);  
     } 
     else {
@@ -179,7 +183,10 @@ void gameScreen() {
   }
   
   if (applyAFB) { // if providing user with auditory feedback
-    if ( ball.position.y <= endTrail){ // if ball is within the trail's y axis
+    if (ball.position.y == startPath){
+        auditoryFeedback.startFeedback();
+      }
+    if (ball.position.y <= endTrail && ball.position.y >= startPath){ // if ball is within the trail's y axis
       auditoryFeedback.sendFeedback(endTrail);  
     } 
     else {
@@ -241,7 +248,10 @@ void gameScreenSecondLevel() {
   }
   
   if (applyAFB) { // if providing user with auditory feedback
-    if ( ball.position.y <= endTrail){ // if ball is within the trail's y axis
+    if (ball.position.y == startPath){
+        auditoryFeedback.startFeedback();
+      }
+    if (ball.position.y <= endTrail && ball.position.y >= startPath){ // if ball is within the trail's y axis
       auditoryFeedback.sendFeedback(endTrail);  
     } 
     else {
@@ -304,7 +314,10 @@ void gameScreenThirdLevel() {
   }
   
   if (applyAFB) { // if providing user with auditory feedback
-    if ( ball.position.y <= endTrail){ // if ball is within the trail's y axis
+    if (ball.position.y == startPath){
+        auditoryFeedback.startFeedback();
+      }
+    if (ball.position.y <= endTrail && ball.position.y >= startPath){ // if ball is within the trail's y axis
       auditoryFeedback.sendFeedback(endTrail);  
     } 
     else {
