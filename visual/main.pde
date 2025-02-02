@@ -26,7 +26,7 @@ PFont font;
 HapticFeedback hapticFeedback; // haptic Feedback
 AuditoryFeedback auditoryFeedback; // auditory feedback
 
-boolean applyHFB = false; // variable to apply haptic feedback --> set to false if testing without
+boolean applyHFB = true; // variable to apply haptic feedback --> set to false if testing without
 boolean applyAFB = false; // variable to apply auditory feedback --> set to false if testing without
 
 int PDPort = 12000; // Port to communicate with PureData
@@ -53,7 +53,7 @@ void setup() {
   // mac: /dev/cu.usbmodem1101
   // arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
   // arduinoPort = new Serial(this, "/dev/cu.usbmodem1101", 115200); //change the port name depending on Mac or Windows
-  arduinoPort = new Serial(this, "COM3", 115200); //change the port name depending on Mac or Windows
+  arduinoPort = new Serial(this, "COM5", 115200); //change the port name depending on Mac or Windows
   
   date = nf(day(), 2) + "-" + nf(month(), 2); // Format: "day-month"
   time = nf(hour(), 2) + "-" + nf(minute(), 2) + "-" + nf(second(), 2); // Format: "hour:minute:seconds"
