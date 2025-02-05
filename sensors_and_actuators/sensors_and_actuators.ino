@@ -1,14 +1,11 @@
 /**
 * 
-* This sketch reads multiple analog sensors and the IMU, and sends the values on the serial port
+* This sketch connect with Proccesing to run the EquiLuna game.
+* It reads the IMU and send the values to Processing. 
+* It receives values for the haptic motors from Processing.
+*
 * 
-* The analog sensors values are filtered with a butterworth lowpass filter.
-* The filtering is achieved by means of the library https://github.com/tttapa/Filters
-* The coefficients for the filter are calculated using the tools: http://www.exstrom.com/journal/sigproc/
-* 
-* 
-* Author: Luca Turchet
-* Date: 30/05/2019
+* Date: 05/02/2024
 * 
 * 
 * 
@@ -43,14 +40,8 @@ static uint32_t BNO055_last_read = 0;
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55); // Here set the ID. In this case it is 55. In this sketch the ID must be different from 0 as 0 is used to reset the EEPROM
 
-bool reset_calibration = false;  // set to true if you want to redo the calibration rather than using the values stored in the EEPROM
-bool display_BNO055_info = false; // set to true if you want to print on the serial port the infromation about the status and calibration of the IMU
-
-
 /* Set the correction factors for the three Euler angles according to the wanted orientation */
-float  correction_x = 0; // -177.19;
 float  correction_y = 3.15; // correction factor 
-float  correction_z = 0; // 1.25;
 
 /**************************************************************************************************************/
 
@@ -84,11 +75,9 @@ void setup() {
   int eeAddress = 0;
   long eeBnoID;
   long bnoID;
-  bool foundCalib = false;
 
   EEPROM.get(eeAddress, eeBnoID);
   
-  adafruit_bno055_offsets_t calibrationData;
   sensor_t sensor;
 
   /*
@@ -119,8 +108,8 @@ void loop() {
     bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
     bno.getEvent(&angVelData, Adafruit_BNO055::VECTOR_GYROSCOPE);
 
-    // Enviar ambos valores por el puerto serie
-    Serial.print(orientationData.orientation.y + correction_y);  // Orientación Y
+    // Send both values through the serial port
+    Serial.print(orientationData.orientation.y + correction_y);  // Y Orientation
     Serial.print("\n");
 
   }
