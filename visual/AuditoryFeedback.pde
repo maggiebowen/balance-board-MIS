@@ -4,7 +4,7 @@ import oscP5.*;
 
 
 class AuditoryFeedback {
-  int port; // port object for pd communication  
+  int port; // Port object for pd communication  
   Ball ball;
   Level level;
   OscP5 oscP5;
@@ -20,11 +20,10 @@ class AuditoryFeedback {
     oscP5 = new OscP5(this, 8000); 
     pureData = new NetAddress("127.0.0.1", this.port); 
     
-    // this.startFeedback();
   }
   
   void sendFeedback(float endTrail) {
-    if (ball.numberMoves >=0 && ball.numberMoves<(endTrail/2) && (playSound)){ //movements quantity that can be done in the path distance
+    if (ball.numberMoves >=0 && ball.numberMoves<(endTrail/2) && (playSound)){ // Movements quantity that can be done in the path distance
       float ballPositionX = ball.position.x;
       
       float levelPositionX = getXAtBallY(this.level, this.ball);
@@ -58,12 +57,12 @@ class AuditoryFeedback {
   
   
   float getXAtBallY(Level level, Ball ball) {
-    for (PVector position : level.path) { // go through all level points
-        if (position.y == ball.position.y) { // find the matching x
-            return position.x; // return it
+    for (PVector position : level.path) {     // Go through all level points
+        if (position.y == ball.position.y) {  // Find the matching x
+            return position.x;                // Return it
         }
     }
-    return -1; // if not found, return -1
+    return -1;
   }
   
 }

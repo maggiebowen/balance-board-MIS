@@ -21,10 +21,8 @@ class Ball {
     this.radius = radius;
     
     if (difficulty == 1) {
-      // this.velY = 1; 
       this.velY = 2;
     } else {
-      // this.velY = 0.5 + (difficulty - 1) * 0.5;
       this.velY = 3;
     }
                 
@@ -46,9 +44,7 @@ class Ball {
     if (started) {
       //update the number of moves
       numberMoves += 1;
-      //print (numberMoves);
-      //print ("\n");
-      // ball moves constantly down at speed 2 (could be modified)
+      // ball moves constantly down at speed 2
       position.y += velY;
   
       // lateral movement

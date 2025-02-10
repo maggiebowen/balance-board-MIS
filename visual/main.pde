@@ -1,6 +1,8 @@
-int gameScreen = 0; // First screen: start game
-boolean nextSublevel = true; // Start next sublevel
-int currentLevel = 0; // Level played
+/* EQUILUNA GAME */
+
+int gameScreen = 0;           // First screen: start game
+boolean nextSublevel = true;  // Start next sublevel
+int currentLevel = 0;         // Level played
 
 Serial arduinoPort; // Create object to communicate with Arduino
 Level level;        // Level object  
@@ -9,10 +11,10 @@ Ball ball;          // Ball object
 import netP5.*;
 import oscP5.*;
 
-PrintWriter output; // for writing results in the txt file
-String date;        // for the date format used in the file's name
-String time;        // for the time format used in the file's name
-String filePath; // name of file used for saving results
+PrintWriter output; // For writing results in the txt file
+String date;        // For the date format used in the file's name
+String time;        // For the time format used in the file's name
+String filePath;    // Name of file used for saving results
 
 PImage bg;
 PImage initScreenBg;
@@ -20,28 +22,27 @@ PImage alien1;
 PImage alien2;
 PImage alien3;
 
-//import to change to custom font
+// Import to change to custom font
 PFont font;
 
-HapticFeedback hapticFeedback; // haptic Feedback
-AuditoryFeedback auditoryFeedback; // auditory feedback
+HapticFeedback hapticFeedback;      // Haptic Feedback
+AuditoryFeedback auditoryFeedback;  // Auditory feedback
 
-boolean applyHFB = true; // variable to apply haptic feedback --> set to false if testing without
-boolean applyAFB = false; // variable to apply auditory feedback --> set to false if testing without
+boolean applyHFB = true;  // Apply haptic feedback --> set to false if testing without
+boolean applyAFB = false; // Apply auditory feedback --> set to false if testing without
 
 int PDPort = 12000; // Port to communicate with PureData
 
-int currentDifficulty = 1; // Global variable to track the level's difficulty
-float radius = 30;        // radius of ball
-float startPath = radius*5; // were the trail will begin
-float finishPath = radius*5; // distance to bottom to where trail ends
-float endTrail;           // were the trail of the level ends
+int currentDifficulty = 1;    // Global variable to track the level's difficulty
+float radius = 30;            // Radius of ball
+float startPath = radius*5;   // Height where the trail will begin
+float finishPath = radius*5;  // Distance to bottom to where trail ends
+float endTrail;               // Where the trail of the level ends
 
 void setup() {
   size(1500,900);
   
-  //make font fit pixel-art style
-  font = createFont("Silkscreen-Bold.ttf", 120);
+  font = createFont("Silkscreen-Bold.ttf", 120); // Make font fit pixel-art style
   textFont(font);
   
   // Load alien images
@@ -49,10 +50,7 @@ void setup() {
   alien2 = loadImage("images/alien2.png");
   alien3 = loadImage("images/alien3.png");
   
-  // Windows: ball = new Ball(this, "COM3", width / 2, 30, 30); 
-  // mac: /dev/cu.usbmodem1101
-  // arduinoPort = new Serial(this, "COM10", 115200); //change the port name depending on Mac or Windows
-  // arduinoPort = new Serial(this, "/dev/cu.usbmodem1101", 115200); //change the port name depending on Mac or Windows
+  // arduinoPort = new Serial(this, "/dev/cu.usbmodem1101", 115200); 
   arduinoPort = new Serial(this, "COM5", 115200); //change the port name depending on Mac or Windows
   
   date = nf(day(), 2) + "-" + nf(month(), 2); // Format: "day-month"
@@ -67,13 +65,13 @@ void draw() {
   } else if (gameScreen == 1) {
     tutorialScreen();         // <-- New tutorial screen
   } else if (gameScreen == 2) {
-    gameScreen();             // easy level
+    gameScreen();             // Easy level
   } else if (gameScreen == 3) {
-    gameScreenSecondLevel();  // medium level
+    gameScreenSecondLevel();  // Medium level
   } else if (gameScreen == 4) {
-    gameScreenThirdLevel();   // hard level
+    gameScreenThirdLevel();   // Hard level
   } else if (gameScreen == 5) {
-    gameOverScreen();         // game over
+    gameOverScreen();         // Game over
   }
 }
 
@@ -97,10 +95,6 @@ void initScreen() {
 
 //  Tutorial Level
 void tutorialScreen() {
-  //fill(255);
-  //textAlign(CENTER, CENTER);
-  //textSize(40);
-  //text("TUTORIAL: Practice controlling the astronaut", width/2, height/2);
   
   if (nextSublevel) { // Only initialize when starting a new sublevel
     initializeTutorialScreen();
@@ -337,7 +331,7 @@ void gameScreenThirdLevel() {
     String fileName = date + "---" + time + "-" + level.id + currentDifficulty+ ".txt"; // Format: "date---time.txt"
     
     filePath = "../results/"+fileName;
-    // write the accuracy results
+    // Write the accuracy results
     output = createWriter(filePath); // open the file
     output.println(applyHFB+","+applyAFB+","+level.id+","+currentDifficulty+","+accuracy+","+similarity+","+consistency);
     output.close();
@@ -353,7 +347,7 @@ void gameScreenThirdLevel() {
   }
 }
 
-//Game Over Screen
+// Game Over Screen
 void gameOverScreen() {
   background(initScreenBg);
   
@@ -551,8 +545,6 @@ public void mousePressed() {
   }
 }
 
-
-
 /********* OTHER FUNCTIONS *********/
 
 // This method sets the necessary variables to start the game 
@@ -560,14 +552,14 @@ void goHome() {
   gameScreen=0;
 }
 void startTutorial() {
-  gameScreen = 1;  // tutorial
-  currentLevel = 0;  // or however you want to track this
+  gameScreen = 1;  // Tutorial
+  currentLevel = 0;
   nextSublevel = true;
   currentDifficulty = 1;
 }
 void startGame() {
-  gameScreen = 2;    // increase the screen
-  currentLevel = 1;  // set the currentLevel as 1
+  gameScreen = 2;    // Increase the screen
+  currentLevel = 1;
   nextSublevel = true;  
   currentDifficulty = 1;
 }
